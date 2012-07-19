@@ -1,0 +1,25 @@
+//
+// Prefix header for all source files of the 'EnterpriseAddressBook' target in the 'EnterpriseAddressBook' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_4_0
+#warning "This project uses features only available in iOS SDK 4.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+static NSString *kPhoneNumber = @"phone_number";
+static NSString *kNamePinyin = @"name_pinyin";
+static NSString *kContact = @"contact";
+static NSString *kAppearIndex = @"appear_index";
+static NSString *kNamePinyinArray = @"name_pinyin_array";
+static NSString *kSortCounter = @"sort_counter";
+static NSString *kNamePinyinKey = @"name_pinyin_key";
+static NSString *kNamePinyinNum = @"name_pinyin_num";
+
+static NSString *kNameNumLocation = @"name_num_location";
+static NSString *kSaveKeyMarkerLines = @"SaveKeyMarkerLines";
+#endif
