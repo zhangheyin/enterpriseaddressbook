@@ -1,6 +1,6 @@
 //
 //  MainViewController.h
-//  TestTabBar
+//  MainViewController
 //
 //  Created by Lion User on 12-6-24.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.

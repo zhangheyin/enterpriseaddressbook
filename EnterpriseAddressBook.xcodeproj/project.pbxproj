@@ -105,10 +105,6 @@
 		84F22FEB15B53F00005CF86E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84F22FE915B53F00005CF86E /* InfoPlist.strings */; };
 		84F22FED15B53F00005CF86E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F22FEC15B53F00005CF86E /* main.m */; };
 		84F22FF115B53F00005CF86E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F22FF015B53F00005CF86E /* AppDelegate.m */; };
-		84F22FF615B53F00005CF86E /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F22FF515B53F00005CF86E /* first.png */; };
-		84F22FF815B53F00005CF86E /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F22FF715B53F00005CF86E /* first@2x.png */; };
-		84F22FFD15B53F00005CF86E /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F22FFC15B53F00005CF86E /* second.png */; };
-		84F22FFF15B53F00005CF86E /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F22FFE15B53F00005CF86E /* second@2x.png */; };
 		84F2300215B53F00005CF86E /* DialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84F2300015B53F00005CF86E /* DialViewController.xib */; };
 		84F2301215B53FF0005CF86E /* DialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F2300D15B53FF0005CF86E /* DialViewController.m */; };
 		84F2301315B53FF0005CF86E /* DialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F2300F15B53FF0005CF86E /* DialView.m */; };
@@ -245,10 +241,6 @@
 		84F22FEE15B53F00005CF86E /* EnterpriseAddressBook-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EnterpriseAddressBook-Prefix.pch"; sourceTree = "<group>"; };
 		84F22FEF15B53F00005CF86E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		84F22FF015B53F00005CF86E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		84F22FF515B53F00005CF86E /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
-		84F22FF715B53F00005CF86E /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
-		84F22FFC15B53F00005CF86E /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
-		84F22FFE15B53F00005CF86E /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
 		84F2300115B53F00005CF86E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DialViewController.xib; sourceTree = "<group>"; };
 		84F2300C15B53FF0005CF86E /* DialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DialViewController.h; sourceTree = "<group>"; };
 		84F2300D15B53FF0005CF86E /* DialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DialViewController.m; sourceTree = "<group>"; };
@@ -286,6 +278,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		843FA5F615B7E84A009C899E /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				84C8116215B7D89F00C97A1A /* Icon_2x.png */,
+				84C8116315B7D89F00C97A1A /* Icon.png */,
+				84CB78B915B7D04700936965 /* Avatar.png */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
+		843FA5F715B7E88D009C899E /* EnterpriseDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				842EF0EA15B796F200ECC2B6 /* ycontacts.db */,
+			);
+			name = EnterpriseDatabase;
+			sourceTree = "<group>";
+		};
 		84541ACC15B652A70079FF96 /* ContactsViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,24 +412,18 @@
 		84F22FE615B53F00005CF86E /* EnterpriseAddressBook */ = {
 			isa = PBXGroup;
 			children = (
-				84C8116215B7D89F00C97A1A /* Icon_2x.png */,
-				84C8116315B7D89F00C97A1A /* Icon.png */,
-				84CB78B915B7D04700936965 /* Avatar.png */,
-				842EF0EA15B796F200ECC2B6 /* ycontacts.db */,
+				84F22FEF15B53F00005CF86E /* AppDelegate.h */,
+				84F22FF015B53F00005CF86E /* AppDelegate.m */,
+				84F230B115B546FB005CF86E /* MainViewController.h */,
+				84F230B215B546FC005CF86E /* MainViewController.m */,
+				843FA5F715B7E88D009C899E /* EnterpriseDatabase */,
 				84541AD815B67C060079FF96 /* EnterpriseCircle */,
 				84541ACC15B652A70079FF96 /* ContactsViewController */,
 				84F230A815B54270005CF86E /* AddressBook */,
 				84F2309E15B5421B005CF86E /* PinYin */,
 				84F2300B15B53FD5005CF86E /* DialViewController */,
-				84F22FEF15B53F00005CF86E /* AppDelegate.h */,
-				84F22FF015B53F00005CF86E /* AppDelegate.m */,
-				84F22FF515B53F00005CF86E /* first.png */,
-				84F22FF715B53F00005CF86E /* first@2x.png */,
-				84F22FFC15B53F00005CF86E /* second.png */,
-				84F22FFE15B53F00005CF86E /* second@2x.png */,
-				84F230B115B546FB005CF86E /* MainViewController.h */,
-				84F230B215B546FC005CF86E /* MainViewController.m */,
 				84F22FE715B53F00005CF86E /* Supporting Files */,
+				843FA5F615B7E84A009C899E /* Resource */,
 			);
 			path = EnterpriseAddressBook;
 			sourceTree = "<group>";
@@ -606,10 +610,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				84F22FEB15B53F00005CF86E /* InfoPlist.strings in Resources */,
-				84F22FF615B53F00005CF86E /* first.png in Resources */,
-				84F22FF815B53F00005CF86E /* first@2x.png in Resources */,
-				84F22FFD15B53F00005CF86E /* second.png in Resources */,
-				84F22FFF15B53F00005CF86E /* second@2x.png in Resources */,
 				84F2300215B53F00005CF86E /* DialViewController.xib in Resources */,
 				84F230AC15B542F7005CF86E /* CallRecordCell.xib in Resources */,
 				8496974615B6465600C72EEF /* ContactItemCell.xib in Resources */,

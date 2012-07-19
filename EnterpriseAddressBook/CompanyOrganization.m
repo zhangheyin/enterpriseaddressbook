@@ -1,6 +1,6 @@
 //
 //  CompanyOrganization.m
-//  TestSQLite
+//  CompanyOrganization
 //
 //  Created by admin on 12-7-10.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.

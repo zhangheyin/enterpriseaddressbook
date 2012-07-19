@@ -1,6 +1,6 @@
 //
 //  SearchPinYin.m
-//  TestTabBar
+//  SearchPinYin
 //
 //  Created by Heyin Zhang on 12-7-2.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
