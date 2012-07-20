@@ -22,18 +22,26 @@
 @synthesize all_keys = _all_keys;
 @synthesize tableView = _tableView;
 @synthesize filtered_enterprise_contacts = _filtered_enterprise_contacts;
-
-
+@synthesize sortKindsIndex = _sortKindsIndex;
+@synthesize allDepartments = _allDepartments;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  NSLog(@"viewDidLoad");
+
+  UIBarButtonItem *rightButton=[[UIBarButtonItem alloc]initWithTitle:@"排序方式" style:UIBarButtonItemStyleBordered target:self action:@selector(sortKind)];
+
+  self.navigationItem.rightBarButtonItem = rightButton;
+  [rightButton release];  
+  
+
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
     //NSLog(@"%@", self.enterprise_contacts);
-    self.all_keys = [self fetchAllKey:self.enterprise_contacts];
+    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
       [self.tableView reloadData];
@@ -42,6 +50,8 @@
   
   dispatch_release(q);  
 }
+
+
 
 - (void)viewDidUnload {
   [self setTableView:nil];
@@ -54,42 +64,131 @@
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+
+- (void) sortKind
+{
+  UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"排序方式" 
+                                                          delegate:(id<UIActionSheetDelegate>)self   
+                                                 cancelButtonTitle:nil//@"取消"
+                                            destructiveButtonTitle:nil//@"修改联系人" 
+                                                 otherButtonTitles:@"按姓名排序", @"按部门排序", nil];
+  
+  popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
+  [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
+  [popupQuery release];
+}
+
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+  NSLog(@"didDismissWithButtonIndex");
+  
+  switch (buttonIndex) {
+    case 0:
+      self.sortKindsIndex = 0;
+      
+     // [self.tableView reloadData];
+      break;
+    case 1:
+      self.sortKindsIndex = 1;
+     // ;
+    default:
+      break;
+  }
+  [self.tableView reloadData];
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
   if (tableView == self.searchDisplayController.searchResultsTableView) {
     return 1;
   } else {
-    return [self.all_keys count];
+    NSInteger sectionCount = 0;
+    switch (self.sortKindsIndex) {
+      case 0:
+        sectionCount = [self.all_keys count];
+        break;
+      case 1:
+        sectionCount = [self.allDepartments count];
+        break;
+      default:
+        break;
+    }
+    
+    return sectionCount;
   }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {  
+  NSLog(@"numberOfRowsInSection");
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
     return [self.filtered_enterprise_contacts count];
   } else {
-    return [[self fetchContactOnASetion:self.enterprise_contacts 
-                  numberOfRowsInSection:section] count];
+    
+    switch (self.sortKindsIndex) {
+      case 0:
+        return [[self fetchContactOnASetion:self.enterprise_contacts 
+                      numberOfRowsInSection:section 
+                                 whichIndex:self.sortKindsIndex] count];
+        break;
+      case 1:
+        return [[self fetchContactOnASetion:self.enterprise_contacts 
+                      numberOfRowsInSection:section  
+                                 whichIndex:self.sortKindsIndex] count];
+        break;
+      default:
+        break;
+    }
+    
+
   }
+  return 0;
 }
 
 /*ADD DATE 2012 0706
- FOR FETCH THE CONTACTS AT A SETION CONTACTS LIST
- */
+ FOR FETCH THE CONTACTS AT A SETION CONTACTS LIST */
 - (NSMutableArray *) fetchContactOnASetion:(NSArray *)contacts
-                     numberOfRowsInSection:(NSUInteger)section {
-  NSString *key = [self.all_keys objectAtIndex:section];
-  
-  NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
-  for (EnterpriseContact *aContact in contacts) {
-    if ([key isEqualToString:aContact.name_pinyin_index]) {
-      [contacts_in_this_section addObject:aContact];
+                     numberOfRowsInSection:(NSUInteger)section 
+                                whichIndex:(NSInteger)sortIndex {
+  switch (sortIndex) {
+    case 0:
+    {
+      NSString *key = [self.all_keys objectAtIndex:section];
+      
+      NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
+      for (EnterpriseContact *aContact in contacts) {
+        if ([key isEqualToString:aContact.name_pinyin_index]) {
+          [contacts_in_this_section addObject:aContact];
+        }
+      }
+      return contacts_in_this_section;
     }
+      break;
+    case 1:
+    {
+      NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
+      NSString *key = [[[self.allDepartments objectAtIndex:section] allKeys] objectAtIndex:0];
+    
+      for (EnterpriseContact *aContact in contacts) {
+        //NSLog(@"%@", aContact.depart_id);
+        if ([key isEqualToString:aContact.depart_id]) {
+          [contacts_in_this_section addObject:aContact];
+        }
+      }
+      return contacts_in_this_section;
+    }
+      break;
+    default:
+      break;
   }
-  return contacts_in_this_section;
+  
+  return nil;
+  
+
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView 
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
   //NSLog(@"%@",self.searchDisplayController.searchResultsTableView);
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
@@ -130,7 +229,8 @@
     NSUInteger row = [indexPath row];
     //NSLog(@"%@", self.all_keys);
     EnterpriseContact *aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
-                                         numberOfRowsInSection:section] objectAtIndex:row];
+                                         numberOfRowsInSection:section 
+                                                    whichIndex:self.sortKindsIndex] objectAtIndex:row];
     
     
     cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
@@ -150,18 +250,52 @@ titleForHeaderInSection:(NSInteger)section {
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
     return nil;
   } else {
-    NSString *key = [self.all_keys objectAtIndex:section];
-    if (key == UITableViewIndexSearch)
-      return nil;
-    return key;
+ 
+    NSString *titleHeader = [[[NSString alloc] init] autorelease];
+    switch (self.sortKindsIndex) {
+      case 0: {
+       titleHeader = [self.all_keys objectAtIndex:section];
+        if (titleHeader == UITableViewIndexSearch)
+          return nil;
+        return titleHeader;
+      }
+        break;
+      case 1:
+        titleHeader = [[[self.allDepartments objectAtIndex:section] allValues] objectAtIndex:0];
+        return titleHeader;        
+        break;
+      default:
+        break;
+        return nil;
+    }
   } 
+  return nil;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
   if (tableView == self.searchDisplayController.searchResultsTableView) {
     return nil;
   } else {
-    return self.all_keys;
+    switch (self.sortKindsIndex) {
+      case 0:
+        return self.all_keys;
+        break;
+      case 1: {
+        NSMutableArray *allDepartmentsName = [[[NSMutableArray alloc] init] autorelease];
+
+        for (NSDictionary *singleDepartment in allDepartmentsName) {
+          [allDepartmentsName addObject: [[singleDepartment allValues] objectAtIndex:0]];
+        }
+        return allDepartmentsName;
+      } 
+        break;
+        
+       // return [ self.allDepartments 
+      default:
+        break;
+    }
+    
+    return nil;
   } 
 }
 
@@ -239,13 +373,14 @@ sectionForSectionIndexTitle:(NSString *)title
   EnterpriseContact *aContact;
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-    NSLog(@"%@", aContact);
+   // NSLog(@"%@", aContact);
     
   } else {
     
     
     aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
-                      numberOfRowsInSection:section] objectAtIndex:row];
+                      numberOfRowsInSection:section 
+                                 whichIndex:self.sortKindsIndex] objectAtIndex:row];
     
   }
   ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aContact.vcard];
@@ -275,7 +410,7 @@ sectionForSectionIndexTitle:(NSString *)title
 
 /*add 20120710*/
 
-- (NSArray *)fetchAllKey:(NSArray*)contacts {
+- (NSArray *)fetchAllPinyinKey:(NSArray*)contacts {
   NSMutableArray *keyArray = [[[NSMutableArray alloc] init] autorelease];
   
   for (EnterpriseContact *aContacts in contacts) {

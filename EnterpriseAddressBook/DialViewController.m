@@ -11,7 +11,8 @@
 #import "CallRecordCell.h"
 #import "CallRecord.h"
 @interface DialViewController ()
-
+- (void) toHidden;
+- (void) toAppear;
 @end
 
 @implementation DialViewController
@@ -155,49 +156,69 @@
   return  [NSDate date];
 }
 
-
-- (void)update {
-
-
+- (void) toHidden
+{
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
   positionAnimation.duration =.5f;
   CGMutablePathRef path = CGPathCreateMutable(); //创建路径
   CGFloat x1 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
   CGFloat y1 = 233.f;//self.dialView.bounds.size.height - 50; //self.dialView.frame.origin.y + 200;  
   CGFloat x2 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
-  CGFloat y2 = 587.f;//self.dialView.frame.origin.y + 500;   
+  CGFloat y2 = 550.f;//self.dialView.frame.origin.y + 500;   
+  //NSLog(@"%f, %f, %f, %f", self.dialView.frame.origin.x, self.dialView.bounds.size.width, x2, y2);
+  //NSLog(@"%f, %f", self.dialView.frame.origin.x, self.dialView.frame.origin.y );
+  CGPathMoveToPoint(path, NULL, x1, y1); //移动到指定路径
+  CGPathAddLineToPoint(path, NULL, x2, y2); //添加一条路径
+  
+  positionAnimation.path = path; //设置移动路径为刚才创建的路径
+  CGPathRelease(path);
+  
+  [self.dialView.layer addAnimation:positionAnimation forKey:@"Test"];
+  //[self.dialView setHidden:YES];
+  self.dialView.frame = CGRectMake(160, 587,320, self.dialView.bounds.size.height);
+}
+
+- (void) toAppear
+{
+  self.dialView.frame = CGRectMake(0, 87, 320, self.dialView.bounds.size.height);
+  CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
+  positionAnimation.duration =.5f;
+  CGMutablePathRef path = CGPathCreateMutable(); //创建路径
+  CGFloat x1 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
+  CGFloat y1 = 233.f;//self.dialView.bounds.size.height - 50; //self.dialView.frame.origin.y + 200;  
+  CGFloat x2 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
+  CGFloat y2 = 550.f;//self.dialView.frame.origin.y + 500;   
   
 
+ // NSLog(@"%f, %f, %f, %f", x1, y1, x2, y2);
+  
+  CGPathMoveToPoint(path, NULL, x2, y2); //移动到指定路径
+  CGPathAddLineToPoint(path, NULL, x1, y1); //添加一条路径
+  
+  positionAnimation.path = path; //设置移动路径为刚才创建的路径
+  CGPathRelease(path);
+  
+  [self.dialView.layer addAnimation:positionAnimation forKey:@"Test"];
+}
+- (void)update {
+
+
+
+  
   if (self.isHidden) {
-    self.dialView.frame = CGRectMake(0, 87, 320, self.dialView.bounds.size.height);
     self.isHidden = NO;
-    NSLog(@"%f, %f, %f, %f", x1, y1, x2, y2);
-    
-    CGPathMoveToPoint(path, NULL, x2, y2); //移动到指定路径
-    CGPathAddLineToPoint(path, NULL, x1, y1); //添加一条路径
-    // CGPathAddCurveToPoint(path, NULL, 30, 80, 80, 70, 50, 20); //曲线路径，在此随便填的
-    // CGPathAddCurveToPoint(path, NULL, 30, 50, 80, 0, 40, 30);
-    positionAnimation.path = path; //设置移动路径为刚才创建的路径
-    CGPathRelease(path);
-    
-    [self.dialView.layer addAnimation:positionAnimation forKey:@"Test"];
+
+    [self toAppear];
     //[self.dialView setHidden:NO];
   } else {
     self.isHidden = YES;
-    NSLog(@"%f, %f, %f, %f", x1, y1, x2, y2);
-    NSLog(@"%f, %f", self.dialView.frame.origin.x, self.dialView.frame.origin.y );
-    CGPathMoveToPoint(path, NULL, x1, y1); //移动到指定路径
-    CGPathAddLineToPoint(path, NULL, x2, y2); //添加一条路径
-    // CGPathAddCurveToPoint(path, NULL, 30, 80, 80, 70, 50, 20); //曲线路径，在此随便填的
-    // CGPathAddCurveToPoint(path, NULL, 30, 50, 80, 0, 40, 30);
-    positionAnimation.path = path; //设置移动路径为刚才创建的路径
-    CGPathRelease(path);
-    
-    [self.dialView.layer addAnimation:positionAnimation forKey:@"Test"];
-    //[self.dialView setHidden:YES];
-    self.dialView.frame = CGRectMake(x2, y2,320, self.dialView.bounds.size.height);
+    [self toHidden];
+
   }
 }
+
+
+
 
 
 - (void)viewDidUnload {
@@ -368,7 +389,8 @@
   if (self.isSearching) {
     if (!self.isHidden) {
       self.isHidden = YES;
-      [self.dialView setHidden:YES];
+      //[self.dialView setHidden:YES];
+      [self toHidden];
       return nil;
     } else {
       return indexPath;
@@ -376,7 +398,8 @@
   } else {
     if (!self.isHidden) {
       self.isHidden = YES;
-      [self.dialView setHidden:YES];
+      //[self.dialView setHidden:YES];
+      [self toHidden];
       return nil;
     } else {
       return indexPath;
@@ -384,18 +407,21 @@
   }
   
 }  
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if (self.isSearching) {
     if (!self.isHidden) {
       self.isHidden = YES;
-      [self.dialView setHidden:YES];
+      //[self.dialView setHidden:YES];
+      [self toHidden];
     } else {
       NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
       contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
       ABContact *abContact = [contact_dict objectForKey:kContact];
       NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
-      //NSLog(@"contact.phoneArray   %@", [abContact.phoneArray objectAtIndex:0]);
+      //    g(@"contact.phoneArray   %@", [abContact.phoneArray objectAtIndex:0]);
       
       self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
       if (abContact != nil) {

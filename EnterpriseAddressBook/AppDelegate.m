@@ -10,6 +10,7 @@
 #import "ContactsViewController.h"
 #import "DialViewController.h"
 #import "EnterpriseNameViewController.h"
+#import "EnterpriseContactViewController.h"
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -22,8 +23,7 @@
   [super dealloc];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
   UITabBarItem *dialTab = [[UITabBarItem alloc] initWithTitle:@"拨号" image:nil tag:0];
   UITabBarItem *contactTab = [[UITabBarItem alloc] initWithTitle:@"联系人" image:nil tag:1];
@@ -32,16 +32,16 @@
   // Override point for customization after application launch.
   UIViewController *contactsViewController = [[[ContactsViewController alloc] initWithNibName:@"ContactsViewController" bundle:nil] autorelease];
   UIViewController *dialViewController = [[[DialViewController alloc] initWithNibName:@"DialViewController" bundle:nil] autorelease];
-  UIViewController *enterpriseNameViewController = [[EnterpriseNameViewController alloc] initWithNibName:@"EnterpriseNameViewController" bundle:nil];
-  
+  //UIViewController *enterpriseNameViewController = [[EnterpriseNameViewController alloc] initWithNibName:@"EnterpriseNameViewController" bundle:nil];
+  UIViewController *enterpriseContactViewController = [[[EnterpriseContactViewController alloc] initWithNibName:@"EnterpriseContactViewController" bundle:nil] autorelease];
   
   UINavigationController *aNavigationController1 = [[[UINavigationController alloc] initWithRootViewController:dialViewController] autorelease];
   UINavigationController *aNavigationController2 = [[[UINavigationController alloc] initWithRootViewController:contactsViewController] autorelease];
-  UINavigationController *aNavigationController3 = [[[UINavigationController alloc] initWithRootViewController:enterpriseNameViewController] autorelease];
+  UINavigationController *aNavigationController3 = [[[UINavigationController alloc] initWithRootViewController:enterpriseContactViewController] autorelease];
   
-  [contactsViewController.navigationItem setTitle: @"通话记录"];
-  [dialViewController.navigationItem setTitle: @"联系人"];
-  [enterpriseNameViewController.navigationItem setTitle: @"企业圈"];
+  [contactsViewController.navigationItem setTitle: @"联系人"];
+  [dialViewController.navigationItem setTitle: @"通话记录"];
+  [enterpriseContactViewController.navigationItem setTitle: @"企业圈"];
   
   aNavigationController1.tabBarItem = dialTab;
   aNavigationController2.tabBarItem = contactTab;

@@ -98,7 +98,7 @@
     aContact.name_pinyin_array =  contacts_pinyin_array;
     aContact.name_pinyin = contacts_pinyin; 
     aContact.name_pinyin_number = [self fetchPinyinForNum:contacts_pinyin_array];
-    aContact.name_pinyin_index = (![contacts_pinyin isEqualToString:@""]) ? [contacts_pinyin substringToIndex:1] :   @"#";
+    aContact.name_pinyin_index = (![contacts_pinyin isEqualToString:@""]) ? [contacts_pinyin substringToIndex:1] : [aContact.name substringToIndex:1];//   @"#";
   }
   return all_enterprise_contact;
 }
