@@ -31,7 +31,6 @@
   
   // Override point for customization after application launch.
   UIViewController *contactsViewController = [[[ContactsViewController alloc] initWithNibName:@"ContactsViewController" bundle:nil] autorelease];
-  
   UIViewController *dialViewController = [[[DialViewController alloc] initWithNibName:@"DialViewController" bundle:nil] autorelease];
   UIViewController *enterpriseNameViewController = [[EnterpriseNameViewController alloc] initWithNibName:@"EnterpriseNameViewController" bundle:nil];
   
@@ -39,18 +38,20 @@
   UINavigationController *aNavigationController1 = [[[UINavigationController alloc] initWithRootViewController:dialViewController] autorelease];
   UINavigationController *aNavigationController2 = [[[UINavigationController alloc] initWithRootViewController:contactsViewController] autorelease];
   UINavigationController *aNavigationController3 = [[[UINavigationController alloc] initWithRootViewController:enterpriseNameViewController] autorelease];
+  
   [contactsViewController.navigationItem setTitle: @"通话记录"];
   [dialViewController.navigationItem setTitle: @"联系人"];
   [enterpriseNameViewController.navigationItem setTitle: @"企业圈"];
+  
   aNavigationController1.tabBarItem = dialTab;
   aNavigationController2.tabBarItem = contactTab;
   aNavigationController3.tabBarItem = enterpriseTab;
-  [aNavigationController1.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   
+  [aNavigationController1.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   [aNavigationController2.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   [aNavigationController3.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
-  self.tabBarController = [[[MainViewController alloc] init] autorelease];
   
+  self.tabBarController = [[[MainViewController alloc] init] autorelease];
   self.tabBarController.viewControllers = [NSArray arrayWithObjects:aNavigationController1, aNavigationController2, aNavigationController3, nil];
   
   self.window.rootViewController = self.tabBarController;

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		8428112415B7DF6800ADF6B9 /* Icon_2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C8116215B7D89F00C97A1A /* Icon_2x.png */; };
 		842EF0EB15B796F200ECC2B6 /* ycontacts.db in Resources */ = {isa = PBXBuildFile; fileRef = 842EF0EA15B796F200ECC2B6 /* ycontacts.db */; };
+		843FA61315B7EF9A009C899E /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 843FA61215B7EF9A009C899E /* CustomView.m */; };
+		843FA61515B7EFF7009C899E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 843FA61415B7EFF7009C899E /* QuartzCore.framework */; };
 		84541ACA15B64DDC0079FF96 /* ContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541AC815B64DDC0079FF96 /* ContactsViewController.m */; };
 		84541ACB15B64DDC0079FF96 /* ContactsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84541AC915B64DDC0079FF96 /* ContactsViewController.xib */; };
 		84541ACF15B6533A0079FF96 /* ContactCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84541ACE15B6533A0079FF96 /* ContactCell.xib */; };
@@ -119,6 +121,9 @@
 
 /* Begin PBXFileReference section */
 		842EF0EA15B796F200ECC2B6 /* ycontacts.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = ycontacts.db; sourceTree = "<group>"; };
+		843FA61115B7EF9A009C899E /* CustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomView.h; sourceTree = "<group>"; };
+		843FA61215B7EF9A009C899E /* CustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomView.m; sourceTree = "<group>"; };
+		843FA61415B7EFF7009C899E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		84541AC715B64DDC0079FF96 /* ContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsViewController.h; sourceTree = "<group>"; };
 		84541AC815B64DDC0079FF96 /* ContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsViewController.m; sourceTree = "<group>"; };
 		84541AC915B64DDC0079FF96 /* ContactsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactsViewController.xib; sourceTree = "<group>"; };
@@ -266,6 +271,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				843FA61515B7EFF7009C899E /* QuartzCore.framework in Frameworks */,
 				84541BAF15B6A51F0079FF96 /* AddressBookUI.framework in Frameworks */,
 				84541B0A15B67FA60079FF96 /* libsqlite3.0.dylib in Frameworks */,
 				84F230B015B54326005CF86E /* AddressBook.framework in Frameworks */,
@@ -399,6 +405,7 @@
 		84F22FDF15B53F00005CF86E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				843FA61415B7EFF7009C899E /* QuartzCore.framework */,
 				84541BAE15B6A51E0079FF96 /* AddressBookUI.framework */,
 				84541B0915B67FA60079FF96 /* libsqlite3.0.dylib */,
 				84F230AF15B54325005CF86E /* AddressBook.framework */,
@@ -412,6 +419,8 @@
 		84F22FE615B53F00005CF86E /* EnterpriseAddressBook */ = {
 			isa = PBXGroup;
 			children = (
+				843FA61115B7EF9A009C899E /* CustomView.h */,
+				843FA61215B7EF9A009C899E /* CustomView.m */,
 				84F22FEF15B53F00005CF86E /* AppDelegate.h */,
 				84F22FF015B53F00005CF86E /* AppDelegate.m */,
 				84F230B115B546FB005CF86E /* MainViewController.h */,
@@ -721,6 +730,7 @@
 				84541BA315B692B10079FF96 /* ABContact.m in Sources */,
 				84541BA415B692B10079FF96 /* ABContactsHelper.m in Sources */,
 				84541BA515B692B10079FF96 /* ABGroup.m in Sources */,
+				843FA61315B7EF9A009C899E /* CustomView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

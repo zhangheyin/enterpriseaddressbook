@@ -118,20 +118,20 @@
     static NSString *CustomCellIdentifier = @"ContactItemCell";
     
     //static BOOL nibsRegistered = NO;
-   // if (!nibsRegistered) {
-      UINib *nib = [UINib nibWithNibName:@"ContactItemCell" bundle:nil];
-      [tableView registerNib:nib forCellReuseIdentifier:CustomCellIdentifier];
-   //   nibsRegistered = YES;
+    // if (!nibsRegistered) {
+    UINib *nib = [UINib nibWithNibName:@"ContactItemCell" bundle:nil];
+    [tableView registerNib:nib forCellReuseIdentifier:CustomCellIdentifier];
+    //   nibsRegistered = YES;
     //}
     
     ContactItemCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomCellIdentifier];
-
+    
     NSUInteger section = [indexPath section];
     NSUInteger row = [indexPath row];
     //NSLog(@"%@", self.all_keys);
     EnterpriseContact *aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
-                        numberOfRowsInSection:section] objectAtIndex:row];
-
+                                         numberOfRowsInSection:section] objectAtIndex:row];
+    
     
     cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
@@ -167,7 +167,7 @@ titleForHeaderInSection:(NSInteger)section {
 
 - (NSInteger)tableView:(UITableView *)tableView
 sectionForSectionIndexTitle:(NSString *)title
-       atIndex:(NSInteger)index {
+               atIndex:(NSInteger)index {
   NSString *key = [self.all_keys objectAtIndex:index];
   if (key == UITableViewIndexSearch) {
     [tableView setContentOffset:CGPointZero animated:NO];
@@ -176,43 +176,43 @@ sectionForSectionIndexTitle:(NSString *)title
 }
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  // Return NO if you do not want the specified item to be editable.
-  return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  if (editingStyle == UITableViewCellEditingStyleDelete) {
-    // Delete the row from the data source
-    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-  }  
-  else if (editingStyle == UITableViewCellEditingStyleInsert) {
-    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-  }  
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }  
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }  
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  // Return NO if you do not want the item to be re-orderable.
-  return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 
@@ -238,15 +238,15 @@ sectionForSectionIndexTitle:(NSString *)title
   
   EnterpriseContact *aContact;
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
-     aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
+    aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
     NSLog(@"%@", aContact);
     
   } else {
     
-
-  aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
-                                       numberOfRowsInSection:section] objectAtIndex:row];
-  
+    
+    aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
+                      numberOfRowsInSection:section] objectAtIndex:row];
+    
   }
   ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aContact.vcard];
   ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
@@ -277,7 +277,7 @@ sectionForSectionIndexTitle:(NSString *)title
 
 - (NSArray *)fetchAllKey:(NSArray*)contacts {
   NSMutableArray *keyArray = [[[NSMutableArray alloc] init] autorelease];
-
+  
   for (EnterpriseContact *aContacts in contacts) {
     [keyArray addObject:aContacts.name_pinyin_index];
   }
@@ -292,38 +292,38 @@ sectionForSectionIndexTitle:(NSString *)title
 }
 
 - (void)fetchContacts {
-//  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-//  dispatch_async(q, ^{  
-//    NSArray *con = [EnterpriseContacts contacts:self.company_id];
-//    //self.contacts = [ABContactsHelper contacts];
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//      self.enterprise_contacts = con;
-//    });
-//  });
-//  dispatch_release(q);
-//   
+  //  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  //  dispatch_async(q, ^{  
+  //    NSArray *con = [EnterpriseContacts contacts:self.company_id];
+  //    //self.contacts = [ABContactsHelper contacts];
+  //    dispatch_async(dispatch_get_main_queue(), ^{
+  //      self.enterprise_contacts = con;
+  //    });
+  //  });
+  //  dispatch_release(q);
+  //   
 }
 #pragma mark -
 #pragma mark Content Filtering
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
   //执行姓名首字母的
- // [self fetchContacts];
+  // [self fetchContacts];
   NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
-                            addressBook:self.enterprise_contacts];  
+                                                                   addressBook:self.enterprise_contacts];  
   //执行号码的检索
   //[self fetchContacts];
   NSArray *resultOfNumberSearch = [EnterpriseSearchPinYin executeNumberSearch:searchText 
-                             addressBook:self.enterprise_contacts];
+                                                                  addressBook:self.enterprise_contacts];
   //执行全拼的检索
   //[self fetchContacts];
   NSArray *resultOfDetailPinyin = [EnterpriseSearchPinYin executeDetailPinyinSearch:searchText 
-                              addressBook:self.enterprise_contacts];
+                                                                        addressBook:self.enterprise_contacts];
   //NSLog(@"~~~~~~2~~~~~~~");    
   NSArray *finalResult = [[resultOfKeyPinyin arrayByAddingObjectsFromArray:resultOfNumberSearch] arrayByAddingObjectsFromArray:resultOfDetailPinyin];
   //NSLog(@"%@", final_result);    
   NSSet *set = [NSSet setWithArray:finalResult];
-
+  
   self.filtered_enterprise_contacts = [set allObjects];
   //NSLog(@"%@", self.filtered_enterprise_contacts);
 }
@@ -356,7 +356,7 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [_filtered_enterprise_contacts release];
   [_company_id release];
   [_all_keys release];
-
+  
   [super dealloc];
 }
 

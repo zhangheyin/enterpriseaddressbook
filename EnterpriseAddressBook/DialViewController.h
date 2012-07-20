@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "DialView.h"
+#import "CustomView.h"
 
 static NSString *kTelephoneNumber = @"telephonenumber";
 static NSString *kHaveContacts = @"havecontacts";
 static NSString *kMain = @"main";
 static NSString *kDialTime = @"dialtime";
 @interface DialViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
-
+@property (nonatomic, assign) CALayer *layer;
 @property (retain, nonatomic) IBOutlet UILabel *diaplayLable;
 @property (copy, nonatomic) NSString *telephone_number;
 @property (retain, nonatomic) IBOutlet DialView *dialView;
