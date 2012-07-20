@@ -80,7 +80,11 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier]; 
   } 
   cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
-  cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
+  cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 
+                                                                green:0x66/255.0 
+                                                                 blue:40.f/255.0 
+                                                                alpha:1.0];
+  
   cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
   // Configure the cell...
   Company *aCompany = [self.enterprise_array objectAtIndex:[indexPath row]];
@@ -131,7 +135,8 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  EnterpriseContactViewController *ecvc = [[EnterpriseContactViewController alloc] initWithNibName:@"EnterpriseContactViewController" bundle:nil];
+  EnterpriseContactViewController *ecvc = [[EnterpriseContactViewController alloc] initWithNibName:@"EnterpriseContactViewController" 
+                                                                                            bundle:nil];
 
   Company *aCompany = [self.enterprise_array objectAtIndex:[indexPath row]];
   NSString *company_id = aCompany.companyID;
@@ -139,7 +144,6 @@
   [ecvc setCompany_id:company_id];
   [self.navigationController pushViewController:ecvc animated:YES];
   [ecvc release];
-  
 }
 
 - (void)dealloc {

@@ -8,7 +8,6 @@
 
 #import "EnterpriseContactDatabase.h"
 #import "EnterpriseContact.h"
-
 #import "FMDatabase.h"
 @implementation EnterpriseContactDatabase
 

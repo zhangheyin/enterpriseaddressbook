@@ -81,17 +81,13 @@
 
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-  NSLog(@"didDismissWithButtonIndex");
-  
   switch (buttonIndex) {
     case 0:
       self.sortKindsIndex = 0;
-      
-     // [self.tableView reloadData];
       break;
     case 1:
       self.sortKindsIndex = 1;
-     // ;
+      break;
     default:
       break;
   }
@@ -120,11 +116,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {  
-  NSLog(@"numberOfRowsInSection");
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
     return [self.filtered_enterprise_contacts count];
   } else {
-    
     switch (self.sortKindsIndex) {
       case 0:
         return [[self fetchContactOnASetion:self.enterprise_contacts 
@@ -151,8 +145,7 @@
                      numberOfRowsInSection:(NSUInteger)section 
                                 whichIndex:(NSInteger)sortIndex {
   switch (sortIndex) {
-    case 0:
-    {
+    case 0:{
       NSString *key = [self.all_keys objectAtIndex:section];
       
       NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
@@ -164,8 +157,7 @@
       return contacts_in_this_section;
     }
       break;
-    case 1:
-    {
+    case 1:{
       NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
       NSString *key = [[[self.allDepartments objectAtIndex:section] allKeys] objectAtIndex:0];
     
@@ -183,8 +175,6 @@
   }
   
   return nil;
-  
-
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView 
@@ -232,10 +222,8 @@
                                          numberOfRowsInSection:section 
                                                     whichIndex:self.sortKindsIndex] objectAtIndex:row];
     
-    
     cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
-    
     
     cell.name = aContact.name;
     cell.number = aContact.phone_number;
@@ -250,7 +238,6 @@ titleForHeaderInSection:(NSInteger)section {
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
     return nil;
   } else {
- 
     NSString *titleHeader = [[[NSString alloc] init] autorelease];
     switch (self.sortKindsIndex) {
       case 0: {
@@ -373,15 +360,12 @@ sectionForSectionIndexTitle:(NSString *)title
   EnterpriseContact *aContact;
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-   // NSLog(@"%@", aContact);
-    
+   // NSLog(@"%@", aContact); 
   } else {
-    
-    
+ 
     aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
                       numberOfRowsInSection:section 
                                  whichIndex:self.sortKindsIndex] objectAtIndex:row];
-    
   }
   ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aContact.vcard];
   ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
@@ -409,7 +393,6 @@ sectionForSectionIndexTitle:(NSString *)title
 }
 
 /*add 20120710*/
-
 - (NSArray *)fetchAllPinyinKey:(NSArray*)contacts {
   NSMutableArray *keyArray = [[[NSMutableArray alloc] init] autorelease];
   
@@ -470,7 +453,6 @@ sectionForSectionIndexTitle:(NSString *)title
 shouldReloadTableForSearchString:(NSString *)searchString {
   [self filterContentForSearchText:searchString scope:
    [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-  
   // Return YES to cause the search result table view to be reloaded.
   return YES;
 }
@@ -480,7 +462,6 @@ shouldReloadTableForSearchString:(NSString *)searchString {
 shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
    [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-  
   // Return YES to cause the search result table view to be reloaded.
   return YES;
 }
@@ -491,15 +472,17 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [_filtered_enterprise_contacts release];
   [_company_id release];
   [_all_keys release];
-  
+  [_allDepartments release];
   [super dealloc];
 }
 
 #pragma mark ABPersonViewControllerDelegate methods
 // Does not allow users to perform default actions such as dialing a phone number, when they select a contact property.
-- (BOOL)personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person 
-                    property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifierForValue{
-	return NO;
+- (BOOL)personViewController:(ABPersonViewController *)personViewController 
+shouldPerformDefaultActionForPerson:(ABRecordRef)person 
+                    property:(ABPropertyID)property 
+                  identifier:(ABMultiValueIdentifier)identifierForValue{
+	return YES;
 }
 
 @end

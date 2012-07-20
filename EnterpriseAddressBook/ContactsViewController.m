@@ -318,6 +318,6 @@ sectionForSectionIndexTitle:(NSString *)title
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
-	return NO;
+	return YES;
 }
 @end
