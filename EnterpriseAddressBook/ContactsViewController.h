@@ -21,6 +21,9 @@
 - (NSMutableArray *) fetchContactOnASetion:(NSArray *)contacts
                      numberOfRowsInSection:(NSUInteger)section;
 - (NSArray *)fetchAllKey:(NSArray*)contacts;
+- (IBAction)toggleEdit;
+- (void) setBarButtonItems;
+- (void) sortKind;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 
 @end

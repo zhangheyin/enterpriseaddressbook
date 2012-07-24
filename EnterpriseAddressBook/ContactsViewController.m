@@ -5,7 +5,7 @@
 //  Created by admin on 12-7-5.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
-
+#define SYSBARBUTTON(ITEM, SELECTOR) [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:ITEM target:self action:SELECTOR] autorelease]
 #import "ContactsViewController.h"
 #import "ContactItemCell.h"
 @interface ContactsViewController ()
@@ -24,12 +24,12 @@
 - (void)viewDidLoad {
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
-  UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd     
-                                                                                 target:self 
-                                                                                action:@selector(showNewPersonViewController)];
-                                   
+  UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithTitle:@"选项" style:UIBarButtonItemStyleBordered target:self action:@selector(sortKind)];
+  //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"DELETE" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
+ // self.navigationItem.leftBarButtonItem = leftButton;
   self.navigationItem.rightBarButtonItem = rightButton;
   [rightButton release]; 
+ // [leftButton release];
   //self.tableView.clearsContextBeforeDrawing = NO;
   
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
@@ -42,6 +42,34 @@
     });
   });
   dispatch_release(q);  
+}
+- (void) sortKind {
+  UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"联系人选项" 
+                                                          delegate:(id<UIActionSheetDelegate>)self   
+                                                 cancelButtonTitle:nil//@"取消"
+                                            destructiveButtonTitle:nil//@"修改联系人" 
+                                                 otherButtonTitles:@"新建联系人", @"删除联系人", nil];
+  
+  popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
+  [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
+  [popupQuery release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+  switch (buttonIndex) {
+    case 0:
+      //self.sortKindsIndex = 0;
+      [self showNewPersonViewController];
+      break;
+    case 1:
+      //self.sortKindsIndex = 1;
+      [self toggleEdit];
+      break;
+    default:
+      break;
+  }
+  [self.tableView reloadData];
 }
 
 - (void)viewDidUnload {
@@ -108,6 +136,16 @@
 	[navigation release];	
   //[self.tableView reloadData];
 }
+
+- (IBAction)toggleEdit {
+  [self.tableView setEditing:!self.tableView.editing animated:YES];
+//  
+//  if (self.tableView.editing)
+//    [self.navigationItem.rightBarButtonItem setTitle:@"done"];
+//  else
+//    [self.navigationItem.rightBarButtonItem setTitle:@"delete"];
+}
+
 
 #pragma mark - Table view data source
 
@@ -185,6 +223,74 @@
   } 
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  if (editingStyle == UITableViewCellEditingStyleDelete) {
+    // Delete the row from the data source
+    NSUInteger section = [indexPath section];
+    NSUInteger row = [indexPath row];
+    //NSLog(@"%@", self.all_keys);
+    ABContact *aContact;
+    if (tableView == self.searchDisplayController.searchResultsTableView)	{
+      NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
+      aContact = [contact_dict objectForKey:kContact];
+    } else {
+      NSDictionary *contact_dict_section = [[self fetchContactOnASetion:self.contacts 
+                                                  numberOfRowsInSection:section] objectAtIndex:row];
+      aContact = [contact_dict_section objectForKey:kContact];
+    }
+    ABRecordRef person = aContact.record;
+    //取得本地通信录名柄
+    ABAddressBookRef tmpAddressBook = ABAddressBookCreate();
+    NSArray* tmpPersonArray = (NSArray*)ABAddressBookCopyArrayOfAllPeople(tmpAddressBook); 
+    
+    ABAddressBookRemoveRecord(tmpAddressBook, person, nil); 
+    
+    //保存电话本 
+    ABAddressBookSave(tmpAddressBook, nil);
+    //释放内存 
+    [tmpPersonArray release];
+    CFRelease(tmpAddressBook);    
+    
+    dispatch_queue_t q = dispatch_queue_create("queue", 0);
+    dispatch_async(q, ^{
+      self.contacts = [ABContactsHelper contacts]; 
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView setEditing:NO animated:YES];   
+        [self.tableView reloadData];
+      });
+    });
+    dispatch_release(q);      
+
+   // [self setBarButtonItems];
+    //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+  }   
+  else if (editingStyle == UITableViewCellEditingStyleInsert) {
+    // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+  }   
+}
+
+- (void) setBarButtonItems {
+	//self.navigationItem.leftBarButtonItem = SYSBARBUTTON(UIBarButtonSystemItemAdd, @selector(addItem:));
+	
+	if (self.tableView.isEditing)
+		self.navigationItem.leftBarButtonItem = SYSBARBUTTON(UIBarButtonSystemItemDone, @selector(leaveEditMode));
+	//else
+	//	self.navigationItem.rightBarButtonItem = self.contacts.count ? SYSBARBUTTON(UIBarButtonSystemItemEdit, @selector(enterEditMode)) : nil;
+}
+
+-(void)leaveEditMode {
+	[self.tableView setEditing:NO animated:YES];
+	[self setBarButtonItems];
+}
+
+-(void)enterEditMode
+{
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+	[self.tableView setEditing:YES animated:YES];
+	[self setBarButtonItems];
+}
+
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section {
 	if (tableView == self.searchDisplayController.searchResultsTableView)	{
@@ -222,22 +328,20 @@ sectionForSectionIndexTitle:(NSString *)title
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   NSUInteger section = [indexPath section];
   NSUInteger row = [indexPath row];
   //NSLog(@"%@", self.all_keys);
-  ABContact *contact;
+  ABContact *aContact;
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
-    contact = [contact_dict objectForKey:kContact];
+    aContact = [contact_dict objectForKey:kContact];
   } else {
     NSDictionary *contact_dict_section = [[self fetchContactOnASetion:self.contacts 
                                                 numberOfRowsInSection:section] objectAtIndex:row];
-    contact = [contact_dict_section objectForKey:kContact];
+    aContact = [contact_dict_section objectForKey:kContact];
   }
-  ABRecordRef person = contact.record;
+  ABRecordRef person = aContact.record;
   ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
   picker.personViewDelegate = self;
   picker.displayedPerson = person;
@@ -247,8 +351,7 @@ sectionForSectionIndexTitle:(NSString *)title
   [self.navigationController pushViewController:picker animated:YES];
 }
 
-- (void)fetchContacts
-{
+- (void)fetchContacts {
   //dispatch_queue_t q = dispatch_queue_create("queue", 0);
   //dispatch_async(q, ^{
   //    self.contacts = [ABContactsHelper contacts]; 

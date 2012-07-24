@@ -229,11 +229,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/ContactsViewController.m"
-         timestampString = "364728881.834836"
+         timestampString = "364789732.617012"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "109"
-         endingLineNumber = "109"
+         startingLineNumber = "137"
+         endingLineNumber = "137"
          landmarkName = "-showNewPersonViewController"
          landmarkType = "5">
       </FileBreakpoint>
@@ -242,12 +242,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/ContactsViewController.m"
-         timestampString = "364723359.018591"
+         timestampString = "364789802.663847"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "56"
-         endingLineNumber = "56"
-         landmarkName = "-viewWillAppear:"
+         startingLineNumber = "276"
+         endingLineNumber = "276"
+         landmarkName = "-setBarButtonItems"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "EnterpriseAddressBook/ContactsViewController.m"
+         timestampString = "364789802.663847"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "283"
+         endingLineNumber = "283"
+         landmarkName = "-leaveEditMode"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
