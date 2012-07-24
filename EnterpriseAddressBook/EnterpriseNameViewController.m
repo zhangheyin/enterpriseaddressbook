@@ -148,7 +148,7 @@
 
 - (void)dealloc {
   [_tableView release];
-//  [_enterpriseDatabase release];
+  //[_enterpriseDatabase release];
   [_enterprise_array release];
   [super dealloc];
 }

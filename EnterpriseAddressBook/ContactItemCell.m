@@ -11,12 +11,12 @@
 @implementation ContactItemCell
 
 @synthesize name_lable = _name_lable;
-@synthesize pinyin_lable = _pinyin_lable;
+//@synthesize pinyin_lable = _pinyin_lable;
 @synthesize number_lable = _number_lable;
 @synthesize thumbnailView = _thumbnailView;
 
 @synthesize name = _name;
-@synthesize pinyin = _pinyin;
+//@synthesize pinyin = _pinyin;
 @synthesize number = _number;
 @synthesize image = _image;
 
@@ -28,13 +28,13 @@
     }
 }
 
-- (void)setPinyin:(NSString *)aPinyin
-{
-    if (![aPinyin isEqualToString:_pinyin]) {
-        _pinyin = [aPinyin copy];
-        self.pinyin_lable.text = _pinyin;
-    }
-}
+//- (void)setPinyin:(NSString *)aPinyin
+//{
+//    if (![aPinyin isEqualToString:_pinyin]) {
+//        _pinyin = [aPinyin copy];
+//        self.pinyin_lable.text = _pinyin;
+//    }
+//}
 
 - (void)setImage:(UIImage *) aImage
 {
@@ -72,7 +72,7 @@
     [_thumbnailView release];
     [_name_lable release];
     [_number_lable release];
-    [_pinyin_lable release];
+  //  [_pinyin_lable release];
     [super dealloc];
 }
 @end

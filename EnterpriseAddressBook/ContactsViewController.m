@@ -24,7 +24,14 @@
 - (void)viewDidLoad {
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
-
+  UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd     
+                                                                                 target:self 
+                                                                                action:@selector(showNewPersonViewController)];
+                                   
+  self.navigationItem.rightBarButtonItem = rightButton;
+  [rightButton release]; 
+  //self.tableView.clearsContextBeforeDrawing = NO;
+  
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts]; 
@@ -44,6 +51,19 @@
   // e.g. self.myOutlet = nil;
 }
 
+
+- (void)viewWillAppear:(BOOL)animated{
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    self.contacts = [ABContactsHelper contacts]; 
+    self.all_keys = [self fetchAllKey:self.contacts];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      // [self setIsSearching:NO];
+      [self.tableView reloadData];
+    });
+  });
+  dispatch_release(q);  
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
@@ -77,6 +97,17 @@
   return contacts_in_this_section;
 }
 
+-(void)showNewPersonViewController {
+	ABNewPersonViewController *picker = [[ABNewPersonViewController alloc] init];
+	picker.newPersonViewDelegate = self;
+	
+	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:picker];
+	[self presentModalViewController:navigation animated:YES];
+	[navigation.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
+	[picker release];
+	[navigation release];	
+  //[self.tableView reloadData];
+}
 
 #pragma mark - Table view data source
 
@@ -117,11 +148,11 @@
     
     UIImageView *contact_image = (UIImageView *)[cell viewWithTag:1000];
     UILabel *name_lable = (UILabel *)[cell viewWithTag:1010];
-    UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
+   // UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
     UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
     
     name_lable.text = [contact.contactName isEqualToString:@""] ? @"未命名" : contact.contactName;
-    pinyin_lable.text = [contact_dict objectForKey:kNamePinyin];
+   // pinyin_lable.text = [contact_dict objectForKey:kNamePinyin];
     number_lable.text = [contact.phoneArray objectAtIndex:0];
     contact_image.image = [UIImage imageNamed:@"Avatar.png"];
     return cell;
@@ -147,7 +178,7 @@
     ABContact *contact = [contact_dict_section objectForKey:kContact];
     cell.name = [contact.contactName isEqualToString:@""] ? @"未命名" : contact.contactName;
     cell.number = [contact.phoneArray objectAtIndex:0];
-    cell.pinyin = [contact_dict_section objectForKey:kNamePinyin];
+  //  cell.pinyin = [contact_dict_section objectForKey:kNamePinyin];
     cell.image = (contact.image) ? contact.image : [UIImage imageNamed:@"Avatar.png"];
     
     return cell;
@@ -201,12 +232,9 @@ sectionForSectionIndexTitle:(NSString *)title
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
     contact = [contact_dict objectForKey:kContact];
-    
   } else {
-    
     NSDictionary *contact_dict_section = [[self fetchContactOnASetion:self.contacts 
                                                 numberOfRowsInSection:section] objectAtIndex:row];
-    
     contact = [contact_dict_section objectForKey:kContact];
   }
   ABRecordRef person = contact.record;
@@ -309,6 +337,10 @@ sectionForSectionIndexTitle:(NSString *)title
 
 - (void)dealloc {
   [_tableView release];
+  [_contacts release];
+  [_filteredListContent release];
+  [_all_keys release];
+
   [super dealloc];
 }
 
@@ -319,5 +351,13 @@ shouldPerformDefaultActionForPerson:(ABRecordRef)person
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
 	return YES;
+}
+
+
+#pragma mark ABNewPersonViewControllerDelegate methods
+// Dismisses the new-person view controller. 
+- (void)newPersonViewController:(ABNewPersonViewController *)newPersonViewController didCompleteWithNewPerson:(ABRecordRef)person
+{
+	[self dismissModalViewControllerAnimated:YES];
 }
 @end

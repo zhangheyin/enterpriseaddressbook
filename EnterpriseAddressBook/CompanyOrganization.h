@@ -9,9 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @interface CompanyOrganization : NSObject
-@property (nonatomic, strong) NSString *id;
-@property (nonatomic, strong) NSString *result;
-@property (nonatomic, strong) NSString *company_id;
-@property (nonatomic, strong) NSString *auth_code;
-@property (nonatomic, strong) NSMutableDictionary *organization_struct;
+@property (nonatomic, copy) NSString *id;
+//@property (nonatomic, copy) NSString *result;
+@property (nonatomic, copy) NSString *company_id;
+//@property (nonatomic, copy) NSString *auth_code;
+//@property (nonatomic, retain) NSMutableDictionary *organization_struct;
+@property (nonatomic, copy) NSString *depart_id;
+@property (nonatomic, copy) NSString *departName;
+@property (nonatomic, copy) NSString *vCard;
++ (NSMutableArray *)queryAllCompanyOrganization:(NSString *)companyID 
+                                       departID:(NSString *)departID;
 @end

@@ -13,7 +13,7 @@
 #import "ABContactsHelper.h"
 #import "SearchPinYin.h"
 
-@interface ContactsViewController : UIViewController<ABPersonViewControllerDelegate>
+@interface ContactsViewController : UIViewController <ABPersonViewControllerDelegate, ABNewPersonViewControllerDelegate>
 @property (nonatomic, retain) NSArray *contacts;
 @property (nonatomic, retain) NSArray *filteredListContent;
 @property (nonatomic, retain) NSArray *all_keys;

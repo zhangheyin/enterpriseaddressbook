@@ -25,8 +25,8 @@
                                   addressBook:(NSArray *)addressBook;
 + (NSArray *)executePinyinKeySearch2:(NSString *)key_word 
                          addressBook:(NSArray *)addressBook;
-
-+ (NSMutableArray *)fetchKeyAppearPinyinArray:(NSString *)key_word;
+//select * from org where company_id = 3 and parent_id = 0
+//+ (NSMutableArray *)fetchKeyAppearPinyinArray:(NSString *)key_word;
 + (ABContact *) absoluteMatch:(NSString *)key_word 
                   addressBook:(NSArray *)addressBook;
 @end

@@ -12,9 +12,9 @@
 #import "EnterpriseSearchPinYin.h"
 @interface EnterpriseContactViewController : UIViewController <ABPersonViewControllerDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, strong) NSArray *enterprise_contacts;
+@property (nonatomic, retain) NSArray *enterprise_contacts;
 @property (nonatomic, retain) NSArray *filtered_enterprise_contacts;
-@property (nonatomic, strong) NSString *company_id;
+@property (nonatomic, copy) NSString *company_id;
 @property (nonatomic, retain) NSArray *all_keys;
 @property (nonatomic) NSInteger sortKindsIndex;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
@@ -25,4 +25,5 @@
                                 whichIndex:(NSInteger)sortIndex;
 
 - (void) sortKind;
+- (void) intoCompanyOrganization;
 @end

@@ -32,20 +32,14 @@
     NSLog(@"Could not open db.");
     return nil;
   } else {
-    
-    
     FMResultSet *rs = [db executeQuery:@"select struct_id, name from org;"];//, company_id];
     while ([rs next]) {
-      
-      
       NSDictionary *aEnterpriseStruct = [NSDictionary dictionaryWithObject:[rs stringForColumn:@"name"] forKey:[rs stringForColumn:@"struct_id"]];
       [allEnterpriseStructs addObject:aEnterpriseStruct];
-      
     }
   }
-  NSLog(@"%@", allEnterpriseStructs);
+  //NSLog(@"%@", allEnterpriseStructs);
   return allEnterpriseStructs;
-    
 }
 
 + (NSMutableArray *)queryAllEnterpriseContacts2:(NSString *)company_id {
@@ -61,22 +55,18 @@
     NSLog(@"Could not open db.");
     return nil;
   } else {
-  
-    
-    FMResultSet *rs = [db executeQuery:@"select * from data;"];// where company_id = ?;", company_id];
+    FMResultSet *rs = [db executeQuery:@"select * from data;"];
     while ([rs next]) {
       EnterpriseContact *aContact = [[EnterpriseContact alloc] init] ;
-      aContact.contact_id = [rs stringForColumn:@"contact_id"];
-      aContact.name = [rs stringForColumn:@"name"];
-      aContact.name_pinyin = [rs stringForColumn:@"name_pinyin"];
-      aContact.gender = [rs stringForColumn:@"gender"];
-      aContact.company_id = [rs stringForColumn:@"company_id"];
-      aContact.depart_id = [rs stringForColumn:@"depart_id"];
-      aContact.vcard = [rs stringForColumn:@"vcard"];
+      aContact.contact_id   = [rs stringForColumn:@"contact_id"];
+      aContact.name         = [rs stringForColumn:@"name"];
+      aContact.name_pinyin  = [rs stringForColumn:@"name_pinyin"];
+      aContact.gender       = [rs stringForColumn:@"gender"];
+      aContact.company_id   = [rs stringForColumn:@"company_id"];
+      aContact.depart_id    = [rs stringForColumn:@"depart_id"];
+      aContact.vcard        = [rs stringForColumn:@"vcard"];
       aContact.phone_number = [rs stringForColumn:@"pre_tel"];
       [all_enterprise_contacts_array addObject:aContact];
-      
-      
 //      
 //      NSString *stringvcard = [NSString stringWithFormat:@"\nBEGIN:VCARD\nVERSION:3.0\nFN:%@\nN:%@;;;;\nPROFILE:VCARD\nPHOTO;VALUE=URI;TYPE=jpg:\nBDAY:\nTEL;TYPE=cell:%@\nEMAIL;TYPE=work:%@\nTITLE:%@\nORG:%@\nREV:2012-06-13T16\:54\:10Z\nIMPP;X-SERVICE-TYPE=QQ;type=HOME;type=pref:x-apple:888888\nEND:VCARD",
 //                               aContact.name,aContact.name,
@@ -90,7 +80,6 @@
       [aContact release];
     }
     [rs close];
-    
     return all_enterprise_contacts_array;
   }
 }

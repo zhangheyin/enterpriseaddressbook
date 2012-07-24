@@ -48,12 +48,34 @@
   return [scan scanInt:&val] && [scan isAtEnd];
 }
 
-
-+ (NSMutableArray *)fetchKeyAppearPinyinArray:(NSString *)key_word{  
++ (NSMutableArray *)fetchKeyAppearPinyinArray2:(NSString *)key_word {  
   NSMutableArray *all_pinyin_table = [POAPinyin fetchPinyinTableArray];
+  //NSLog(@"%@", all_pinyin_table);
+ // NSArray *key_of_word_array = [self fetchKeyWordArray:key_word];
+  //NSLog(@"%@", key_of_word_array);
+  NSMutableArray *searche_result_array = [[[NSMutableArray alloc] init] autorelease];
+  NSMutableArray *temp_pinyin_array = all_pinyin_table;
   
+  for (NSString *pinyin in temp_pinyin_array) {
+    if ([[EnterpriseContacts fetchDetailPinyinForNum:pinyin ] rangeOfString:key_word 
+                                                                    options:NSCaseInsensitiveSearch].location != NSNotFound) {
+      [searche_result_array addObject:pinyin];
+    }
+  }
+  
+ // temp_pinyin_array = searche_result_array;
+  //[searche_result_array removeAllObjects];
+  NSLog(@"searche_result_array  %@", searche_result_array);
+ // NSLog(@"%@", single_key_word);
+ // NSLog(@"%@", temp_pinyin_array);
+  return searche_result_array;
+}
+  
++ (NSMutableArray *)fetchKeyAppearPinyinArray:(NSString *)key_word {  
+  NSMutableArray *all_pinyin_table = [POAPinyin fetchPinyinTableArray];
+  NSLog(@"%@", all_pinyin_table);
   NSArray *key_of_word_array = [self fetchKeyWordArray:key_word];
-  
+  NSLog(@"%@", key_of_word_array);
   NSMutableArray *searche_result_array = [[[NSMutableArray alloc] init] autorelease];
   NSMutableArray *temp_pinyin_array = all_pinyin_table;
   //6 : M N O
@@ -62,12 +84,13 @@
     //key_of_word_array 6 4 6 2
     NSString *single_key_word = [key_of_word_array objectAtIndex:key_word_index];
     //M N O 6
+    NSLog(@"%@", single_key_word);
     NSArray *single_key_of_one_button = [self.number_pad objectForKey:single_key_word];
     
     for (NSString *current_key in single_key_of_one_button) {
       if (![self isPureInt:current_key]) {
         for (NSString *pinyin in temp_pinyin_array) {
-          if ([pinyin rangeOfString:current_key 
+          if ([[EnterpriseContacts fetchDetailPinyinForNum:pinyin ] rangeOfString:current_key 
                             options:NSCaseInsensitiveSearch].location == key_word_index) {
             [searche_result_array addObject:pinyin];
           }
@@ -76,30 +99,29 @@
     }
     temp_pinyin_array = searche_result_array;
     [searche_result_array removeAllObjects];
-    //NSLog(@"temp_pinyin_database  %@", temp_pinyin_array);
-    //NSLog(@"%@", single_key_word);
+    NSLog(@"temp_pinyin_database  %@", temp_pinyin_array);
+    NSLog(@"%@", single_key_word);
   }//for
-  //NSLog(@"%@", temp_pinyin_array);
+  NSLog(@"%@", temp_pinyin_array);
   return temp_pinyin_array;
 }
 
 + (NSMutableArray *)executeDetailPinyinSearch:(NSString *)key_word
                                   addressBook:(NSArray *)addressBook {
-  NSMutableArray *appear_pinyin_array = [self fetchKeyAppearPinyinArray:key_word];
-  
+ // NSLog(@"key_word %@", key_word);
+  // NSLog(@"appear_pinyin_array %@", appear_pinyin_array);
   NSMutableArray *searched_array = [[[NSMutableArray alloc] init] autorelease];
-  //NSMutableArray *addressBook = [self.addressBookArray copy];
   for (EnterpriseContact *people_info in addressBook) {
-    for(NSString *pinyin_array in appear_pinyin_array) {
-      NSRange range = [people_info.name_pinyin rangeOfString:pinyin_array];
-      //NSLog(@"%@    pinyin_array:%@", [people_info objectForKey:kNamePinyin], pinyin_array);
-      if (range.location != NSNotFound) {   
-        [searched_array addObject:people_info];
-        break;
-      }
+   // NSLog(@"%@ ", people_info.name_pinyin);
+    NSRange range = [[EnterpriseContacts fetchDetailPinyinForNum:people_info.name_pinyin] rangeOfString:key_word];
+    //NSLog(@"%@    pinyin_array:%@", [people_info objectForKey:kNamePinyin], pinyin_array);
+    if (range.location != NSNotFound) {   
+      [searched_array addObject:people_info];
+      break;
     }
+
   }
-  //NSLog(@"%@", searched_array); 
+ // NSLog(@"%@", searched_array); 
   return searched_array;
 }
 

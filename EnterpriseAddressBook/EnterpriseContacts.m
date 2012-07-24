@@ -13,12 +13,70 @@
 
 @implementation EnterpriseContacts
 
++ (NSString *)fetchDetailPinyinForNum:(NSString *)pinyinString{
+  NSString *pinyin_key_to_num = [NSString stringWithString:@""];
+  for (int i = 0; i < pinyinString.length; i++) {
+    NSString *single = [NSString stringWithString:@""];
+    int asciiCode = [pinyinString characterAtIndex:i];
+    switch (asciiCode) {
+      case 65:case 97:
+      case 66:case 98:
+      case 67:case 99:
+        single = @"2";
+        break;
+      case 68:case 100:
+      case 69:case 101:
+      case 70:case 102:  
+        single = @"3";
+        break;
+      case 71:case 103:
+      case 72:case 104:  
+      case 73:case 105:
+        single = @"4";
+        break;
+      case 74:case 106:
+      case 75:case 107:
+      case 76:case 108:
+        single = @"5";
+        break;
+      case 77:case 109:
+      case 78:case 110:
+      case 79:case 111:
+        single = @"6";
+        break;
+      case 80:case 112:
+      case 81:case 113:    
+      case 82:case 114:    
+      case 83:case 115:   
+        single = @"7";
+        break;
+      case 84:case 116:
+      case 85:case 117:    
+      case 86:case 118:  
+        single = @"8";
+        break;
+      case 87:case 119:    
+      case 88:case 120:    
+      case 89:case 121:    
+      case 90:case 122:
+        single = @"9";
+        break;
+        
+      default:
+        break;
+    }
+    pinyin_key_to_num = [pinyin_key_to_num stringByAppendingFormat:@"%@", single];
+  }
+  
+  return pinyin_key_to_num;
+}
+
+
 + (NSString *)fetchPinyinForNum:(NSMutableArray *)pinyin_array {
   NSString *pinyin_key_to_num = [NSString stringWithString:@""];
   for (NSString *single_pinyin in pinyin_array) {
     int asciiCode = [single_pinyin characterAtIndex:0]; // 65
     NSString *single = [NSString stringWithString:@""];
-    // int num_for_pinyin = 0;
     switch (asciiCode) {
       case 65:
       case 66:
@@ -84,8 +142,7 @@
   NSMutableArray *pinyinArray = [POAPinyin newQuickConvert:people_name];
   for (NSString *word in pinyinArray) {
     [name_pinyin appendFormat:@"%@", word];
-  }
- // [POAPinyin clearCache];
+  } 
   return name_pinyin;
 }
 
@@ -103,7 +160,6 @@
   return all_enterprise_contact;
 }
 
-
 + (ABRecordRef) vCardStringtoABRecordRef:(NSString *)vcard_string {
   //NSLog(@"%@", vcard_string);
   // This version simply uses a string. I'm assuming you'll get that from somewhere else.
@@ -111,8 +167,6 @@
   // This line converts the string to a CFData object using a simple cast, which doesn't work under ARC
   CFDataRef vCardData = (CFDataRef)[vcard_string dataUsingEncoding:NSUTF8StringEncoding];
   // If you're using ARC, use this line instead:
-  //CFDataRef vCardData = (__bridge CFDataRef)[vCardString dataUsingEncoding:NSUTF8StringEncoding];
-  
   ABAddressBookRef book = ABAddressBookCreate();
   ABRecordRef defaultSource = ABAddressBookCopyDefaultSource(book);
   CFArrayRef vCardPeople = ABPersonCreatePeopleInSourceWithVCardRepresentation(defaultSource, vCardData);
@@ -130,7 +184,6 @@
   CFDataRef vCardData = (CFDataRef)[vcard_string dataUsingEncoding:NSUTF8StringEncoding];
   // If you're using ARC, use this line instead:
   //CFDataRef vCardData = (__bridge CFDataRef)[vCardString dataUsingEncoding:NSUTF8StringEncoding];
-  
   ABAddressBookRef book = ABAddressBookCreate();
   ABRecordRef defaultSource = ABAddressBookCopyDefaultSource(book);
   CFArrayRef vCardPeople = ABPersonCreatePeopleInSourceWithVCardRepresentation(defaultSource, vCardData);

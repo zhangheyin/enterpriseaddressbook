@@ -159,7 +159,7 @@
 - (void) toHidden
 {
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
-  positionAnimation.duration =.5f;
+  positionAnimation.duration =.3f;
   CGMutablePathRef path = CGPathCreateMutable(); //创建路径
   CGFloat x1 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
   CGFloat y1 = 233.f;//self.dialView.bounds.size.height - 50; //self.dialView.frame.origin.y + 200;  
@@ -182,7 +182,7 @@
 {
   self.dialView.frame = CGRectMake(0, 87, 320, self.dialView.bounds.size.height);
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
-  positionAnimation.duration =.5f;
+  positionAnimation.duration =.3f;
   CGMutablePathRef path = CGPathCreateMutable(); //创建路径
   CGFloat x1 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
   CGFloat y1 = 233.f;//self.dialView.bounds.size.height - 50; //self.dialView.frame.origin.y + 200;  

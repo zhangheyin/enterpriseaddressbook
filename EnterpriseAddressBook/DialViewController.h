@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DialView.h"
-#import "CustomView.h"
+#import <QuartzCore/QuartzCore.h>
 
 static NSString *kTelephoneNumber = @"telephonenumber";
 static NSString *kHaveContacts = @"havecontacts";

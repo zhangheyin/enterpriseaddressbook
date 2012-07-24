@@ -13,4 +13,5 @@
 + (ABContact *) vCardStringtoABContact:(NSString *)vcard_string;
 + (ABRecordRef) vCardStringtoABRecordRef:(NSString *)vcard_string;
 + (NSString *) wholepinyin:(NSMutableArray *)array;
++ (NSString *)fetchDetailPinyinForNum:(NSString *)pinyinString;
 @end

@@ -10,7 +10,7 @@
 #import "EnterpriseContacts.h"
 #import "EnterpriseContact.h"
 #import "ContactItemCell.h"
-
+#import "CompanyOrganizationViewController.h"
 @interface EnterpriseContactViewController ()
 
 @end
@@ -28,11 +28,21 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  UIBarButtonItem *rightButton=[[UIBarButtonItem alloc]initWithTitle:@"排序方式" style:UIBarButtonItemStyleBordered target:self action:@selector(sortKind)];
-
-  self.navigationItem.rightBarButtonItem = rightButton;
-  [rightButton release];  
+  UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc]initWithTitle:@"排序方式" 
+                                                                 style:UIBarButtonItemStyleBordered 
+                                                                target:self 
+                                                                action:@selector(sortKind)];
   
+  UIBarButtonItem *leftButton   = [[UIBarButtonItem alloc]initWithTitle:@"组织结构" 
+                                                                style:UIBarButtonItemStyleBordered 
+                                                               target:self 
+                                                               action:@selector(intoCompanyOrganization)];
+  self.navigationItem.rightBarButtonItem = rightButton;
+  self.navigationItem.leftBarButtonItem = leftButton;
+  
+   
+  [rightButton release];  
+  [leftButton release];
 
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
@@ -64,6 +74,13 @@
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void) intoCompanyOrganization {
+  CompanyOrganizationViewController *covc = [[[CompanyOrganizationViewController alloc] init] autorelease];
+  covc.departID = @"0";
+  covc.companyID = @"3";
+  covc.title = @"组织结构";
+  [self.navigationController pushViewController:covc animated:YES];
+}
 
 - (void) sortKind
 {
@@ -179,7 +196,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView 
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
+  //NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
   //NSLog(@"%@",self.searchDisplayController.searchResultsTableView);
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     static NSString *CellIdentifier = @"CellIdentifier";
@@ -190,16 +207,16 @@
     cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0];  
     EnterpriseContact *aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-    NSLog(@"%@", aContact);
+   // NSLog(@"%@", aContact);
     //ABContact *contact = //[contact_dict objectForKey:kContact];
     
     UIImageView *contact_image = (UIImageView *)[cell viewWithTag:1000];
     UILabel *name_lable = (UILabel *)[cell viewWithTag:1010];
-    UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
+  //  UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
     UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
     
     name_lable.text = aContact.name;//[contact.contactName isEqualToString:@""] ? contact.emailaddresses : contact.contactName;
-    pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
+   // pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
     number_lable.text = aContact.phone_number;//contact.phonenumbers;
     contact_image.image = [UIImage imageNamed:@"Avatar.png"];
     return cell;
@@ -227,7 +244,7 @@
     
     cell.name = aContact.name;
     cell.number = aContact.phone_number;
-    cell.pinyin = aContact.name_pinyin;
+   // cell.pinyin = aContact.name_pinyin;
     cell.image =  [UIImage imageNamed:@"Avatar.png"];
     
     return cell;
@@ -277,11 +294,9 @@ titleForHeaderInSection:(NSInteger)section {
       } 
         break;
         
-       // return [ self.allDepartments 
       default:
         break;
     }
-    
     return nil;
   } 
 }
@@ -293,7 +308,8 @@ sectionForSectionIndexTitle:(NSString *)title
   if (key == UITableViewIndexSearch) {
     [tableView setContentOffset:CGPointZero animated:NO];
     return NSNotFound;
-  } else return index;
+  } else 
+    return index;
 }
 
 /*
@@ -426,7 +442,7 @@ sectionForSectionIndexTitle:(NSString *)title
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
   //执行姓名首字母的
-  // [self fetchContacts];
+  [self fetchContacts];
   NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
                                                                    addressBook:self.enterprise_contacts];  
   //执行号码的检索
@@ -451,7 +467,8 @@ sectionForSectionIndexTitle:(NSString *)title
 #pragma mark UISearchDisplayController Delegate Methods
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller 
 shouldReloadTableForSearchString:(NSString *)searchString {
-  [self filterContentForSearchText:searchString scope:
+  [self filterContentForSearchText:searchString 
+                             scope:
    [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
   // Return YES to cause the search result table view to be reloaded.
   return YES;
