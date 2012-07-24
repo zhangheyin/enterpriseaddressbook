@@ -243,17 +243,14 @@
                                                   numberOfRowsInSection:section] objectAtIndex:row];
       aContact = [contact_dict_section objectForKey:kContact];
     }
+    
     ABRecordRef person = aContact.record;
     //取得本地通信录名柄
     ABAddressBookRef tmpAddressBook = ABAddressBookCreate();
-    NSArray* tmpPersonArray = (NSArray*)ABAddressBookCopyArrayOfAllPeople(tmpAddressBook); 
-    
     ABAddressBookRemoveRecord(tmpAddressBook, person, nil); 
-    
     //保存电话本 
     ABAddressBookSave(tmpAddressBook, nil);
     //释放内存 
-    [tmpPersonArray release];
     CFRelease(tmpAddressBook);    
     
     dispatch_queue_t q = dispatch_queue_create("queue", 0);
@@ -266,6 +263,8 @@
     });
     dispatch_release(q);      
 
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"删除成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];   
+    [alertView show];
    // [self setBarButtonItems];
     //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
   }   
@@ -321,7 +320,7 @@ sectionForSectionIndexTitle:(NSString *)title
   
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     return NSNotFound;
-  }	else	{
+  }	else {
     NSString *key = [self.all_keys objectAtIndex:index];
     if (key == UITableViewIndexSearch) {
       [tableView setContentOffset:CGPointZero animated:NO];

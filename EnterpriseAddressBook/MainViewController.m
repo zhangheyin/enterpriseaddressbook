@@ -8,14 +8,13 @@
 
 #import "MainViewController.h"
 
-@interface MainViewController () <UITabBarDelegate>
+@interface MainViewController ()
 
 @end
 
 @implementation MainViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
   if (self) {
     // Custom initialization
@@ -23,26 +22,22 @@
   return self;
 }
 
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
-{
-  
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"update" object:nil];
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+  if (item.tag == 0) 
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"update" object:nil];
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
   [super viewDidUnload];
   // Release any retained subviews of the main view.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 

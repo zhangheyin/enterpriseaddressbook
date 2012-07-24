@@ -299,6 +299,7 @@
 		843FA5F615B7E84A009C899E /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				84F2309315B5401B005CF86E /* DialViewControllerImage */,
 				8467262315BE6BB7009F5272 /* bg_tab_sms_pressed.png */,
 				8467262115BE6B9C009F5272 /* bg_tab_contact_pressed.png */,
 				8467261F15BE6B90009F5272 /* bg_tab_dial_pressed.png */,
@@ -459,14 +460,12 @@
 				84F22FF015B53F00005CF86E /* AppDelegate.m */,
 				84F230B115B546FB005CF86E /* MainViewController.h */,
 				84F230B215B546FC005CF86E /* MainViewController.m */,
-				843FA5F715B7E88D009C899E /* EnterpriseDatabase */,
-				84541AD815B67C060079FF96 /* EnterpriseCircle */,
+				84F2300B15B53FD5005CF86E /* DialViewController */,
 				84541ACC15B652A70079FF96 /* ContactsViewController */,
+				84541AD815B67C060079FF96 /* EnterpriseCircle */,
 				84F230A815B54270005CF86E /* AddressBook */,
 				84F2309E15B5421B005CF86E /* PinYin */,
-				84F2300B15B53FD5005CF86E /* DialViewController */,
 				84F22FE715B53F00005CF86E /* Supporting Files */,
-				843FA5F615B7E84A009C899E /* Resource */,
 			);
 			path = EnterpriseAddressBook;
 			sourceTree = "<group>";
@@ -474,6 +473,8 @@
 		84F22FE715B53F00005CF86E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				843FA5F715B7E88D009C899E /* EnterpriseDatabase */,
+				843FA5F615B7E84A009C899E /* Resource */,
 				84F22FE815B53F00005CF86E /* EnterpriseAddressBook-Info.plist */,
 				84F22FE915B53F00005CF86E /* InfoPlist.strings */,
 				84F22FEC15B53F00005CF86E /* main.m */,
@@ -485,7 +486,6 @@
 		84F2300B15B53FD5005CF86E /* DialViewController */ = {
 			isa = PBXGroup;
 			children = (
-				84F2309315B5401B005CF86E /* DialViewControllerImage */,
 				84F230AE15B542FD005CF86E /* CallRecordCell */,
 				84F2300015B53F00005CF86E /* DialViewController.xib */,
 				84F2300C15B53FF0005CF86E /* DialViewController.h */,
