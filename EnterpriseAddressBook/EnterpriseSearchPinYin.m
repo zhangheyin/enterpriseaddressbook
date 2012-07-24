@@ -117,7 +117,7 @@
     //NSLog(@"%@    pinyin_array:%@", [people_info objectForKey:kNamePinyin], pinyin_array);
     if (range.location != NSNotFound) {   
       [searched_array addObject:people_info];
-      break;
+      //break;
     }
 
   }

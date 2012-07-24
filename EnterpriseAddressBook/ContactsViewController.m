@@ -24,6 +24,7 @@
 - (void)viewDidLoad {
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
+
   UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithTitle:@"选项" style:UIBarButtonItemStyleBordered target:self action:@selector(sortKind)];
   //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"DELETE" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
  // self.navigationItem.leftBarButtonItem = leftButton;
@@ -38,6 +39,7 @@
     self.all_keys = [self fetchAllKey:self.contacts];
     dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
       [self.tableView reloadData];
     });
   });

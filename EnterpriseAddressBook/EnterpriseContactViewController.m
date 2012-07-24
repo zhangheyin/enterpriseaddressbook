@@ -27,7 +27,10 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
+  [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 
+                                                                       green:0x33/255.0 
+                                                                        blue:0.f/255.0 
+                                                                       alpha:1.0]];
   UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc]initWithTitle:@"排序方式" 
                                                                  style:UIBarButtonItemStyleBordered 
                                                                 target:self 
@@ -50,17 +53,15 @@
     //NSLog(@"%@", self.enterprise_contacts);
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
     self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments];
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
-      // [self setIsSearching:NO];
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
     });
   });
   
   dispatch_release(q);  
 }
-
-
 
 - (void)viewDidUnload {
   [self setTableView:nil];
@@ -93,7 +94,8 @@
   //动画开始(在整体动画的百分比).  
   //animation.startProgress = 0.3;  
  // [imageView.layer addAnimation:animation forKey:nil];  
-  [self.navigationController.view.layer addAnimation:animation forKey:nil];
+  [self.navigationController.view.layer addAnimation:animation 
+                                              forKey:nil];
   [self.navigationController pushViewController:covc animated:NO];
 }
 
@@ -474,7 +476,7 @@ sectionForSectionIndexTitle:(NSString *)title
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
   //执行姓名首字母的
-  [self fetchContacts];
+  //[self fetchContacts];
   NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
                                                                    addressBook:self.enterprise_contacts];  
   //执行号码的检索
