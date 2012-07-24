@@ -72,6 +72,7 @@
   
   cell.textLabel.text = aCompanyOrganization.departName;
   cell.imageView.image = (!aCompanyOrganization.id) ? [UIImage imageNamed:@"ICON_Group.png"] : [UIImage imageNamed:@"ICON_Person.png"];
+  
   return cell;
 }
 
@@ -149,5 +150,12 @@ shouldPerformDefaultActionForPerson:(ABRecordRef)person
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
 	return YES;
+}
+
+- (void)dealloc {
+  [self.allCompanyOrganization release];
+  [self.companyID release];
+  [self.departID release];
+  [super dealloc];
 }
 @end

@@ -490,6 +490,7 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [_company_id release];
   [_all_keys release];
   [_allDepartments release];
+  
   [super dealloc];
 }
 

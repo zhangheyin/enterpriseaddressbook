@@ -22,57 +22,62 @@
 
 - (void) setMain:(NSString *)aMain
 {
-    if (![aMain isEqualToString:_main]) {
-        _main = [aMain copy];
-        self.main_lable.text = _main;
-    }
+  if (![aMain isEqualToString:_main]) {
+    _main = [aMain copy];
+    self.main_lable.text = _main;
+  }
 }
 
 - (void)setDialTime:(NSString *)aDialTime
 {
-    if (![aDialTime isEqualToString:_dialTime]) {
-        _dialTime = [aDialTime copy];
-        self.dial_time_lable.text = _dialTime;
-    }
+  if (![aDialTime isEqualToString:_dialTime]) {
+    _dialTime = [aDialTime copy];
+    self.dial_time_lable.text = _dialTime;
+  }
 }
 
 - (void)setImage:(UIImage *) aImage
 {
-    if (![aImage isEqual:_image]) {
-        _image = [aImage copy];
-        self.picView.image = _image;
-    }   
+  if (![aImage isEqual:_image]) {
+    _image = [aImage copy];
+    self.picView.image = _image;
+  }   
 }
 
 - (void)setNumber:(NSString *) aNumber
 {
-    if (![aNumber isEqualToString:_number]) {
-        _number = [aNumber copy];
-        self.number_lable.text = _number;
-    }
+  if (![aNumber isEqualToString:_number]) {
+    _number = [aNumber copy];
+    self.number_lable.text = _number;
+  }
 }
 //@synthesize controller;
 //@synthesize tableView;
 /*
-- (IBAction)showImage:(id)sender 
-{
-    NSString *selector = NSStringFromSelector(_cmd);
-    selector = [selector stringByAppendingString:@"atIndexPath:"];
-    SEL newSelector = NSSelectorFromString(selector);
-    
-    NSIndexPath *indexPath = [[self tableView] indexPathForCell:self];
-    if(indexPath) {
-        if([controller respondsToSelector:newSelector]) {
-            [controller performSelector:newSelector withObject:sender 
-                             withObject:indexPath];
-        }
-    }
-}*/
+ - (IBAction)showImage:(id)sender 
+ {
+ NSString *selector = NSStringFromSelector(_cmd);
+ selector = [selector stringByAppendingString:@"atIndexPath:"];
+ SEL newSelector = NSSelectorFromString(selector);
+ 
+ NSIndexPath *indexPath = [[self tableView] indexPathForCell:self];
+ if(indexPath) {
+ if([controller respondsToSelector:newSelector]) {
+ [controller performSelector:newSelector withObject:sender 
+ withObject:indexPath];
+ }
+ }
+ }*/
 - (void)dealloc {
-    [_picView release];
-    [_main_lable release];
-    [_number_lable release];
-    [_dial_time_lable release];
-    [super dealloc];
+  [_picView release];
+  [_main_lable release];
+  [_number_lable release];
+  [_dial_time_lable release];
+  [self.image release];
+  [self.main release];
+  [self.number release];
+  [self.dialTime release];
+  
+  [super dealloc];
 }
 @end

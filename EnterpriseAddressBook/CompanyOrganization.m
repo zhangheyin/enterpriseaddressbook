@@ -57,5 +57,13 @@
   return allCompanyOrganization;  
 }
 
-
+- (void) dealloc {
+  [self.id release];
+  [self.company_id release];
+  [self.depart_id release];
+  [self.departName release];
+  [self.vCard release];
+  
+  [super dealloc];
+}
 @end

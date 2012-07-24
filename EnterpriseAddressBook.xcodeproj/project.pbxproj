@@ -16,7 +16,6 @@
 		84541ADD15B67C5C0079FF96 /* EnterpriseNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541ADA15B67C5C0079FF96 /* EnterpriseNameViewController.m */; };
 		84541ADE15B67C5C0079FF96 /* EnterpriseNameDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541ADC15B67C5C0079FF96 /* EnterpriseNameDatabase.m */; };
 		84541AF015B67CBB0079FF96 /* EnterpriseNameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84541AEF15B67CBA0079FF96 /* EnterpriseNameViewController.xib */; };
-		84541AF315B67ED30079FF96 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541AF215B67ED30079FF96 /* Company.m */; };
 		84541AFD15B67EFC0079FF96 /* EnterpriseContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541AF615B67EFC0079FF96 /* EnterpriseContactViewController.m */; };
 		84541AFE15B67EFC0079FF96 /* EnterpriseContactDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541AF815B67EFC0079FF96 /* EnterpriseContactDatabase.m */; };
 		84541AFF15B67EFC0079FF96 /* EnterpriseContacts.m in Sources */ = {isa = PBXBuildFile; fileRef = 84541AFA15B67EFC0079FF96 /* EnterpriseContacts.m */; };
@@ -100,6 +99,7 @@
 		8466C6A515BCF2AE00607A3C /* CompanyOrganizationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8466C6A315BCF2AE00607A3C /* CompanyOrganizationViewController.xib */; };
 		8466C6A915BD19CA00607A3C /* ICON_Group.png in Resources */ = {isa = PBXBuildFile; fileRef = 8466C6A715BD19CA00607A3C /* ICON_Group.png */; };
 		8466C6AA15BD19CA00607A3C /* ICON_Person.png in Resources */ = {isa = PBXBuildFile; fileRef = 8466C6A815BD19CA00607A3C /* ICON_Person.png */; };
+		8467261C15BE4700009F5272 /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 8467261B15BE4700009F5272 /* Company.m */; };
 		8496974515B6465600C72EEF /* ContactItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8496974215B6465600C72EEF /* ContactItemCell.m */; };
 		8496974615B6465600C72EEF /* ContactItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8496974415B6465600C72EEF /* ContactItemCell.xib */; };
 		84C8116515B7D89F00C97A1A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C8116315B7D89F00C97A1A /* Icon.png */; };
@@ -134,8 +134,6 @@
 		84541ADB15B67C5C0079FF96 /* EnterpriseNameDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnterpriseNameDatabase.h; sourceTree = "<group>"; };
 		84541ADC15B67C5C0079FF96 /* EnterpriseNameDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnterpriseNameDatabase.m; sourceTree = "<group>"; };
 		84541AEF15B67CBA0079FF96 /* EnterpriseNameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EnterpriseNameViewController.xib; sourceTree = "<group>"; };
-		84541AF115B67ED30079FF96 /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Company.h; sourceTree = "<group>"; };
-		84541AF215B67ED30079FF96 /* Company.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Company.m; sourceTree = "<group>"; };
 		84541AF515B67EFB0079FF96 /* EnterpriseContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnterpriseContactViewController.h; sourceTree = "<group>"; };
 		84541AF615B67EFC0079FF96 /* EnterpriseContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnterpriseContactViewController.m; sourceTree = "<group>"; };
 		84541AF715B67EFC0079FF96 /* EnterpriseContactDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnterpriseContactDatabase.h; sourceTree = "<group>"; };
@@ -234,6 +232,8 @@
 		8466C6A315BCF2AE00607A3C /* CompanyOrganizationViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CompanyOrganizationViewController.xib; sourceTree = "<group>"; };
 		8466C6A715BD19CA00607A3C /* ICON_Group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ICON_Group.png; sourceTree = "<group>"; };
 		8466C6A815BD19CA00607A3C /* ICON_Person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ICON_Person.png; sourceTree = "<group>"; };
+		8467261A15BE4700009F5272 /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Company.h; sourceTree = "<group>"; };
+		8467261B15BE4700009F5272 /* Company.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Company.m; sourceTree = "<group>"; };
 		8496974215B6465600C72EEF /* ContactItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactItemCell.m; sourceTree = "<group>"; };
 		8496974315B6465600C72EEF /* ContactItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactItemCell.h; sourceTree = "<group>"; };
 		8496974415B6465600C72EEF /* ContactItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactItemCell.xib; sourceTree = "<group>"; };
@@ -293,6 +293,8 @@
 		843FA5F615B7E84A009C899E /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				8466C6A715BD19CA00607A3C /* ICON_Group.png */,
+				8466C6A815BD19CA00607A3C /* ICON_Person.png */,
 				84C8116215B7D89F00C97A1A /* Icon_2x.png */,
 				84C8116315B7D89F00C97A1A /* Icon.png */,
 				84CB78B915B7D04700936965 /* Avatar.png */,
@@ -333,23 +335,13 @@
 		84541AD815B67C060079FF96 /* EnterpriseCircle */ = {
 			isa = PBXGroup;
 			children = (
-				8466C6A715BD19CA00607A3C /* ICON_Group.png */,
-				8466C6A815BD19CA00607A3C /* ICON_Person.png */,
-				8466C6A115BCF2AE00607A3C /* CompanyOrganizationViewController.h */,
-				8466C6A215BCF2AE00607A3C /* CompanyOrganizationViewController.m */,
-				8466C6A315BCF2AE00607A3C /* CompanyOrganizationViewController.xib */,
+				84541B0115B67F040079FF96 /* EnterpriseContacts */,
+				8467261E15BE4A36009F5272 /* EnterpriseName */,
+				84541AEE15B67C770079FF96 /* FMDB */,
+				8467261D15BE49F6009F5272 /* CompanyOrganization */,
+				84541AF415B67ED80079FF96 /* Company */,
 				84541B0D15B68C4E0079FF96 /* EnterpriseSearchPinYin.h */,
 				84541B0E15B68C4E0079FF96 /* EnterpriseSearchPinYin.m */,
-				84541B0615B67F7B0079FF96 /* CompanyOrganization.h */,
-				84541B0715B67F7C0079FF96 /* CompanyOrganization.m */,
-				84541B0115B67F040079FF96 /* EnterpriseContacts */,
-				84541AF415B67ED80079FF96 /* Company */,
-				84541AEF15B67CBA0079FF96 /* EnterpriseNameViewController.xib */,
-				84541AEE15B67C770079FF96 /* FMDB */,
-				84541AD915B67C5C0079FF96 /* EnterpriseNameViewController.h */,
-				84541ADA15B67C5C0079FF96 /* EnterpriseNameViewController.m */,
-				84541ADB15B67C5C0079FF96 /* EnterpriseNameDatabase.h */,
-				84541ADC15B67C5C0079FF96 /* EnterpriseNameDatabase.m */,
 			);
 			name = EnterpriseCircle;
 			sourceTree = "<group>";
@@ -367,6 +359,7 @@
 				84541B9515B6925A0079FF96 /* FMDatabaseQueue.m */,
 				84541B9615B6925A0079FF96 /* FMResultSet.h */,
 				84541B9715B6925A0079FF96 /* FMResultSet.m */,
+				84541AEF15B67CBA0079FF96 /* EnterpriseNameViewController.xib */,
 			);
 			name = FMDB;
 			sourceTree = "<group>";
@@ -374,8 +367,8 @@
 		84541AF415B67ED80079FF96 /* Company */ = {
 			isa = PBXGroup;
 			children = (
-				84541AF115B67ED30079FF96 /* Company.h */,
-				84541AF215B67ED30079FF96 /* Company.m */,
+				8467261A15BE4700009F5272 /* Company.h */,
+				8467261B15BE4700009F5272 /* Company.m */,
 			);
 			name = Company;
 			sourceTree = "<group>";
@@ -394,6 +387,29 @@
 				84541AFC15B67EFC0079FF96 /* EnterpriseContact.m */,
 			);
 			name = EnterpriseContacts;
+			sourceTree = "<group>";
+		};
+		8467261D15BE49F6009F5272 /* CompanyOrganization */ = {
+			isa = PBXGroup;
+			children = (
+				8466C6A115BCF2AE00607A3C /* CompanyOrganizationViewController.h */,
+				8466C6A215BCF2AE00607A3C /* CompanyOrganizationViewController.m */,
+				8466C6A315BCF2AE00607A3C /* CompanyOrganizationViewController.xib */,
+				84541B0615B67F7B0079FF96 /* CompanyOrganization.h */,
+				84541B0715B67F7C0079FF96 /* CompanyOrganization.m */,
+			);
+			name = CompanyOrganization;
+			sourceTree = "<group>";
+		};
+		8467261E15BE4A36009F5272 /* EnterpriseName */ = {
+			isa = PBXGroup;
+			children = (
+				84541AD915B67C5C0079FF96 /* EnterpriseNameViewController.h */,
+				84541ADA15B67C5C0079FF96 /* EnterpriseNameViewController.m */,
+				84541ADB15B67C5C0079FF96 /* EnterpriseNameDatabase.h */,
+				84541ADC15B67C5C0079FF96 /* EnterpriseNameDatabase.m */,
+			);
+			name = EnterpriseName;
 			sourceTree = "<group>";
 		};
 		84F22FD115B53F00005CF86E = {
@@ -727,7 +743,6 @@
 				84541ACA15B64DDC0079FF96 /* ContactsViewController.m in Sources */,
 				84541ADD15B67C5C0079FF96 /* EnterpriseNameViewController.m in Sources */,
 				84541ADE15B67C5C0079FF96 /* EnterpriseNameDatabase.m in Sources */,
-				84541AF315B67ED30079FF96 /* Company.m in Sources */,
 				84541AFD15B67EFC0079FF96 /* EnterpriseContactViewController.m in Sources */,
 				84541AFE15B67EFC0079FF96 /* EnterpriseContactDatabase.m in Sources */,
 				84541AFF15B67EFC0079FF96 /* EnterpriseContacts.m in Sources */,
@@ -743,6 +758,7 @@
 				84541BA415B692B10079FF96 /* ABContactsHelper.m in Sources */,
 				84541BA515B692B10079FF96 /* ABGroup.m in Sources */,
 				8466C6A415BCF2AE00607A3C /* CompanyOrganizationViewController.m in Sources */,
+				8467261C15BE4700009F5272 /* Company.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

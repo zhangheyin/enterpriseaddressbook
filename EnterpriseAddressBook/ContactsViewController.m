@@ -46,7 +46,7 @@
 - (void) sortKind {
   UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"联系人选项" 
                                                           delegate:(id<UIActionSheetDelegate>)self   
-                                                 cancelButtonTitle:nil//@"取消"
+                                                 cancelButtonTitle:@"取消"
                                             destructiveButtonTitle:nil//@"修改联系人" 
                                                  otherButtonTitles:@"新建联系人", @"删除联系人", nil];
   

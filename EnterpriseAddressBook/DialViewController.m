@@ -523,7 +523,7 @@
   [_filteredListContent release];
   [_single_call_history release];
   [_call_history release];
-
+  [self.layer release];
   [super dealloc];
 }
 @end
