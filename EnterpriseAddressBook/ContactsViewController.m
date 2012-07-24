@@ -26,12 +26,9 @@
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
 
   UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithTitle:@"选项" style:UIBarButtonItemStyleBordered target:self action:@selector(sortKind)];
-  //UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"DELETE" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleEdit:)];
- // self.navigationItem.leftBarButtonItem = leftButton;
+
   self.navigationItem.rightBarButtonItem = rightButton;
   [rightButton release]; 
- // [leftButton release];
-  //self.tableView.clearsContextBeforeDrawing = NO;
   
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{

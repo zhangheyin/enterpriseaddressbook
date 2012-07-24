@@ -1,6 +1,6 @@
 //
 //  ContatsViewController.h
-//  Tabbar_iOS5
+//  
 //
 //  Created by admin on 12-7-5.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.

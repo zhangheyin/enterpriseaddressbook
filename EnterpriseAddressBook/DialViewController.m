@@ -74,10 +74,6 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  
-  //////////////////
-
-  //////////////////
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts];    
@@ -151,13 +147,11 @@
   }
 }
 
-
 - (NSDate *)dialTime {
   return  [NSDate date];
 }
 
-- (void) toHidden
-{
+- (void) toHidden {
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
   positionAnimation.duration =.3f;
   CGMutablePathRef path = CGPathCreateMutable(); //创建路径
@@ -178,8 +172,7 @@
   self.dialView.frame = CGRectMake(160, 587,320, self.dialView.bounds.size.height);
 }
 
-- (void) toAppear
-{
+- (void) toAppear {
   self.dialView.frame = CGRectMake(0, 87, 320, self.dialView.bounds.size.height);
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
   positionAnimation.duration =.3f;
@@ -200,11 +193,8 @@
   
   [self.dialView.layer addAnimation:positionAnimation forKey:@"Test"];
 }
+
 - (void)update {
-
-
-
-  
   if (self.isHidden) {
     self.isHidden = NO;
 
@@ -217,10 +207,6 @@
   }
 }
 
-
-
-
-
 - (void)viewDidUnload {
   [self setDiaplayLable:nil];
   [self setDialView:nil];
@@ -230,7 +216,6 @@
   // Release any retained subviews of the main view.
   // e.g. self.myOutlet = nil;
 }
-
 
 - (IBAction)dialNumber:(UIButton *)sender {
   NSString *currentDisplayText = self.number_display.currentTitle ? self.number_display.currentTitle : @"";
@@ -290,7 +275,6 @@
   [data release];
 }
 
-
 - (NSString *)filePathName {
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  
   NSString *documentsDirectory = [paths objectAtIndex:0];  
@@ -349,7 +333,6 @@
   return cell;
 }
 
-
 - (NSInteger)todayTimeInterval {
   NSCalendar *cal = [NSCalendar currentCalendar];
   NSDateComponents* nowHour = [cal components:NSHourCalendarUnit fromDate:[NSDate date]];
@@ -407,7 +390,6 @@
   }
   
 }  
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if (self.isSearching) {
@@ -472,7 +454,6 @@
   }
 }
 
-
 - (void)fetchContacts {
   
   //dispatch_queue_t q = dispatch_queue_create("queue", 0);
@@ -490,7 +471,7 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText {
   /*执行姓名首字母的*/
-  [self fetchContacts];
+  //[self fetchContacts];
   //NSLog(@"filterContentForSearchText start");
   // NSArray *result_of_key_pinyin = [SearchPinYin executePinyinKeySearch:searchText 
   //                                                               addressBook:[self.contacts mutableCopy]]; 
@@ -511,7 +492,6 @@
   self.filteredListContent = [final_result copy];
   [self.table reloadData];
 }
-
 
 - (void)dealloc {
   [_diaplayLable release];
