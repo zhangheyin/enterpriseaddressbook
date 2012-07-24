@@ -131,15 +131,44 @@
     // Allow users to edit the person’s information
     picker.allowsEditing = NO;
     picker.title = aContact.contactName;
-  
-    [self.navigationController pushViewController:picker animated:YES];
+    CATransition *animation = [CATransition animation];  
+    //动画时间  
+    animation.duration = 1.0f;  
+    //display mode, slow at beginning and end  
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+    //过渡效果  
+    animation.type = @"pageCurl";  
+    //过渡方向  
+    animation.subtype = kCATransitionFromRight;  
+    //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+    animation.fillMode = kCAFillModeBackwards;  
+    //动画开始(在整体动画的百分比).  
+    animation.startProgress = 0.3;  
+    // [imageView.layer addAnimation:animation forKey:nil];  
+    // transition.delegate = self;
+    [self.navigationController.view.layer addAnimation:animation forKey:nil];
+    [self.navigationController pushViewController:picker animated:NO];
   } else {
     CompanyOrganizationViewController *covc = [[[CompanyOrganizationViewController alloc] init] autorelease];
     covc.departID = aCompanyOrganization.depart_id;
     covc.companyID = aCompanyOrganization.company_id;
     covc.title = aCompanyOrganization.departName;
-    
-    [self.navigationController pushViewController:covc animated:YES];
+    CATransition *animation = [CATransition animation];  
+    //动画时间  
+    animation.duration = .5f;  
+    //display mode, slow at beginning and end  
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+    //过渡效果  
+    animation.type = @"cube";  
+    //过渡方向  
+    animation.subtype = kCATransitionFromRight;  
+    //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+    // animation.fillMode = kCAFillModeBackwards;  
+    //动画开始(在整体动画的百分比).  
+    //animation.startProgress = 0.3;  
+    // [imageView.layer addAnimation:animation forKey:nil];  
+    [self.navigationController.view.layer addAnimation:animation forKey:nil];
+    [self.navigationController pushViewController:covc animated:NO];
   }
 }
 

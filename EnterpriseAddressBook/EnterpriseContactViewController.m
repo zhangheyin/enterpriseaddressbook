@@ -27,7 +27,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-
+  [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc]initWithTitle:@"排序方式" 
                                                                  style:UIBarButtonItemStyleBordered 
                                                                 target:self 
@@ -40,7 +40,6 @@
   self.navigationItem.rightBarButtonItem = rightButton;
   self.navigationItem.leftBarButtonItem = leftButton;
   
-   
   [rightButton release];  
   [leftButton release];
 
@@ -79,7 +78,23 @@
   covc.departID = @"0";
   covc.companyID = @"3";
   covc.title = @"组织结构";
-  [self.navigationController pushViewController:covc animated:YES];
+  
+  CATransition *animation = [CATransition animation];  
+  //动画时间  
+  animation.duration = .5f;  
+  //display mode, slow at beginning and end  
+  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+  //过渡效果  
+  animation.type = @"cube";  
+  //过渡方向  
+  animation.subtype = kCATransitionFromRight;  
+  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+ // animation.fillMode = kCAFillModeBackwards;  
+  //动画开始(在整体动画的百分比).  
+  //animation.startProgress = 0.3;  
+ // [imageView.layer addAnimation:animation forKey:nil];  
+  [self.navigationController.view.layer addAnimation:animation forKey:nil];
+  [self.navigationController pushViewController:covc animated:NO];
 }
 
 - (void) sortKind {
@@ -390,7 +405,24 @@ sectionForSectionIndexTitle:(NSString *)title
   picker.allowsEditing = NO;
   picker.title = aContact.name;
 
-  [self.navigationController pushViewController:picker animated:YES];
+  
+  CATransition *animation = [CATransition animation];  
+  //动画时间  
+  animation.duration = 1.0f;  
+  //display mode, slow at beginning and end  
+  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+  //过渡效果  
+  animation.type = @"pageCurl";  
+  //过渡方向  
+  animation.subtype = kCATransitionFromRight;  
+  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+  animation.fillMode = kCAFillModeBackwards;  
+  //动画开始(在整体动画的百分比).  
+  animation.startProgress = 0.3;  
+  // [imageView.layer addAnimation:animation forKey:nil];  
+  // transition.delegate = self;
+  [self.navigationController.view.layer addAnimation:animation forKey:nil];
+  [self.navigationController pushViewController:picker animated:NO];
   //	}
   //	else 
   //	{

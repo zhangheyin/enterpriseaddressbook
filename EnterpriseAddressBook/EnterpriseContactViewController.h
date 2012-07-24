@@ -10,6 +10,7 @@
 #import "EnterpriseContactDatabase.h"
 #import "ABContact.h"
 #import "EnterpriseSearchPinYin.h"
+#import <QuartzCore/QuartzCore.h>
 @interface EnterpriseContactViewController : UIViewController <ABPersonViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, retain) NSArray *enterprise_contacts;

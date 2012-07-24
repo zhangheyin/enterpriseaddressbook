@@ -28,10 +28,10 @@
   UITabBarItem *dialTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
                                                         image:[UIImage imageNamed:@"bg_tab_dial_pressed.png"]
                                                           tag:0];
-  UITabBarItem *contactTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
+  UITabBarItem *contactTab = [[UITabBarItem alloc] initWithTitle:@"联系人" 
                                                            image:[UIImage imageNamed:@"bg_tab_contact_pressed.png"]
                                                              tag:1];
-  UITabBarItem *enterpriseTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
+  UITabBarItem *enterpriseTab = [[UITabBarItem alloc] initWithTitle:@"企业圈" 
                                                               image:[UIImage imageNamed:@"bg_tab_sms_pressed.png"]
                                                                 tag:2];
   

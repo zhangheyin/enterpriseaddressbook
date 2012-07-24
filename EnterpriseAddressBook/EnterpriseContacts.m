@@ -148,14 +148,14 @@
 
 + (NSMutableArray *) contacts:(NSString *)company_id {
   NSMutableArray *all_enterprise_contact = [EnterpriseContactDatabase queryAllEnterpriseContacts2:company_id];
-  
+
   for (EnterpriseContact *aContact in all_enterprise_contact) {     
     NSMutableArray *contacts_pinyin_array = [POAPinyin newQuickConvert:aContact.name];
     NSString *contacts_pinyin = [self fetchWholePinyin:aContact.name]; 
     aContact.name_pinyin_array =  contacts_pinyin_array;
     aContact.name_pinyin = contacts_pinyin; 
     aContact.name_pinyin_number = [self fetchPinyinForNum:contacts_pinyin_array];
-    aContact.name_pinyin_index = (![contacts_pinyin isEqualToString:@""]) ? [contacts_pinyin substringToIndex:1] : [aContact.name substringToIndex:1];//   @"#";
+    aContact.name_pinyin_index = (![contacts_pinyin isEqualToString:@""]) ? [contacts_pinyin substringToIndex:1] : [[aContact.name substringToIndex:1] uppercaseString];//   @"#";
   }
   return all_enterprise_contact;
 }

@@ -12,7 +12,7 @@
 #import "POAPinyin.h"
 #import "ABContactsHelper.h"
 #import "SearchPinYin.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface ContactsViewController : UIViewController <ABPersonViewControllerDelegate, ABNewPersonViewControllerDelegate>
 @property (nonatomic, retain) NSArray *contacts;
 @property (nonatomic, retain) NSArray *filteredListContent;

@@ -70,8 +70,7 @@ static int cacheLow = 0;
   
 }
 
-+(NSString*) stringConvert:(NSString*)hzString
-{
++(NSString*) stringConvert:(NSString*)hzString {
   [POAPinyin initCache];
   int hzLength = [hzString length];
   
@@ -252,8 +251,7 @@ static int cacheLow = 0;
   return string_array;//[string uppercaseString];
 }
 
-+ (NSMutableArray *) fetchPinyinTableArray
-{
++ (NSMutableArray *) fetchPinyinTableArray {
   NSMutableArray *pinyin_table_array = [[[NSMutableArray alloc] init] autorelease];
   for (int pos = 0; pos < 475; pos++) {
     pinyinTableCell pycell = pinyinTable[pos];

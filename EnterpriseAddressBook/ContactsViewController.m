@@ -43,6 +43,7 @@
   });
   dispatch_release(q);  
 }
+
 - (void) sortKind {
   UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"联系人选项" 
                                                           delegate:(id<UIActionSheetDelegate>)self   
@@ -79,7 +80,6 @@
   // e.g. self.myOutlet = nil;
 }
 
-
 - (void)viewWillAppear:(BOOL)animated{
 
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
@@ -96,8 +96,6 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
-
 
 - (NSArray *)fetchAllKey:(NSArray*)contacts {
   NSMutableArray *key_array = [[[NSMutableArray alloc] init] autorelease];
@@ -127,16 +125,17 @@
 }
 
 -(void)showNewPersonViewController {
+
 	ABNewPersonViewController *picker = [[ABNewPersonViewController alloc] init];
 	picker.newPersonViewDelegate = self;
 	
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:picker];
-	[self presentModalViewController:navigation animated:YES];
+
+	[self presentModalViewController:navigation animated:NO];
 	[navigation.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
 	[picker release];
 	[navigation release];	
   
-   
   //[self.tableView reloadData];
 }
 
@@ -350,8 +349,25 @@ sectionForSectionIndexTitle:(NSString *)title
   picker.displayedPerson = person;
   // Allow users to edit the person’s information
   picker.allowsEditing = YES;
+
   
-  [self.navigationController pushViewController:picker animated:YES];
+  CATransition *animation = [CATransition animation];  
+  //动画时间  
+  animation.duration = 1.0f;  
+  //display mode, slow at beginning and end  
+  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+  //过渡效果  
+  animation.type = @"pageCurl";  
+  //过渡方向  
+  animation.subtype = kCATransitionFromRight;  
+  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+  animation.fillMode = kCAFillModeBackwards;  
+  //动画开始(在整体动画的百分比).  
+  animation.startProgress = 0.3;  
+ // [imageView.layer addAnimation:animation forKey:nil];  
+ // transition.delegate = self;
+  [self.navigationController.view.layer addAnimation:animation forKey:nil];
+  [self.navigationController pushViewController:picker animated:NO];
 }
 
 - (void)fetchContacts {

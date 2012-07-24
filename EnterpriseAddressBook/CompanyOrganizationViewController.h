@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AddressBook/AddressBook.h>  
 #import <AddressBookUI/AddressBookUI.h> 
+#import <QuartzCore/QuartzCore.h>
 @interface CompanyOrganizationViewController : UITableViewController <ABPersonViewControllerDelegate>
 @property (nonatomic, retain) NSMutableArray *allCompanyOrganization;
 @property (nonatomic, copy) NSString *companyID;

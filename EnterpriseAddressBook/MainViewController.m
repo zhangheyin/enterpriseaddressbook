@@ -25,6 +25,7 @@
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
 {
+  if (item.tag == 0) 
     [[NSNotificationCenter defaultCenter] postNotificationName:@"update" object:nil];
 }
 
