@@ -133,9 +133,7 @@
 }
 
 
-+ (NSMutableArray *)fetchKeyWordArray:(NSString *)key_word_string
-
-{
++ (NSMutableArray *)fetchKeyWordArray:(NSString *)key_word_string {
     NSMutableArray *key_array = [[[NSMutableArray alloc] init] autorelease];
     for (int i = 0; i < [key_word_string length]; i++) {
         [key_array addObject: [key_word_string substringWithRange:NSMakeRange(i,1)]];
@@ -170,9 +168,7 @@
 
 
 + (NSArray *)sortedSearchArray:(NSMutableArray *)unsortedArray
-                        forKey:(NSString *)forkey
-
-{
+                        forKey:(NSString *)forkey {
     NSArray *sortedArray = [unsortedArray sortedArrayUsingComparator:^(id obj1,id obj2)
                             {
                                 NSDictionary *dic1 = (NSDictionary *)obj1;

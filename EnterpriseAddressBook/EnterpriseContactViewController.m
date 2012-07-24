@@ -82,8 +82,7 @@
   [self.navigationController pushViewController:covc animated:YES];
 }
 
-- (void) sortKind
-{
+- (void) sortKind {
   UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"排序方式" 
                                                           delegate:(id<UIActionSheetDelegate>)self   
                                                  cancelButtonTitle:nil//@"取消"
@@ -390,6 +389,7 @@ sectionForSectionIndexTitle:(NSString *)title
   // Allow users to edit the person’s information
   picker.allowsEditing = NO;
   picker.title = aContact.name;
+
   [self.navigationController pushViewController:picker animated:YES];
   //	}
   //	else 

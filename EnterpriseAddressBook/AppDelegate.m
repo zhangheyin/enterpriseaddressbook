@@ -25,9 +25,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-  UITabBarItem *dialTab = [[UITabBarItem alloc] initWithTitle:@"拨号" image:nil tag:0];
-  UITabBarItem *contactTab = [[UITabBarItem alloc] initWithTitle:@"联系人" image:nil tag:1];
-  UITabBarItem *enterpriseTab = [[UITabBarItem alloc] initWithTitle:@"企业圈" image:nil tag:2];  
+  UITabBarItem *dialTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
+                                                        image:[UIImage imageNamed:@"bg_tab_dial_pressed.png"]
+                                                          tag:0];
+  UITabBarItem *contactTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
+                                                           image:[UIImage imageNamed:@"bg_tab_contact_pressed.png"]
+                                                             tag:1];
+  UITabBarItem *enterpriseTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
+                                                              image:[UIImage imageNamed:@"bg_tab_sms_pressed.png"]
+                                                                tag:2];
   
   // Override point for customization after application launch.
   UIViewController *contactsViewController = [[[ContactsViewController alloc] initWithNibName:@"ContactsViewController" bundle:nil] autorelease];

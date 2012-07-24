@@ -81,6 +81,7 @@
 
 
 - (void)viewWillAppear:(BOOL)animated{
+
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts]; 
@@ -134,6 +135,8 @@
 	[navigation.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
 	[picker release];
 	[navigation release];	
+  
+   
   //[self.tableView reloadData];
 }
 
