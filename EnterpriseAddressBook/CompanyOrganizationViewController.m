@@ -129,32 +129,41 @@
   CompanyOrganization *aCompanyOrganization = [self.allCompanyOrganization objectAtIndex:[indexPath row]];
   
   if (aCompanyOrganization.id) {
-    ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aCompanyOrganization.vCard];
-    ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
-    ABContact *aContact = [ABContact contactWithRecord:person];
+    dispatch_queue_t q = dispatch_queue_create("queue", 0);
+    dispatch_async(q, ^{
+      
+      ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aCompanyOrganization.vCard];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
+        ABContact *aContact = [ABContact contactWithRecord:person];
+        
+        picker.personViewDelegate = self;
+        picker.displayedPerson = person;
+        // Allow users to edit the person’s information
+        picker.allowsEditing = NO;
+        picker.title = aContact.contactName;
+        CATransition *animation = [CATransition animation];  
+        //动画时间  
+        animation.duration = 0.5f;  
+        //display mode, slow at beginning and end  
+        animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+        //过渡效果  
+        animation.type = @"pageCurl";  
+        //过渡方向  
+        animation.subtype = kCATransitionFromRight;  
+        //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+        animation.fillMode = kCAFillModeBackwards;  
+        //动画开始(在整体动画的百分比).  
+        animation.startProgress = 0.3;  
+        // [imageView.layer addAnimation:animation forKey:nil];  
+        // transition.delegate = self;
+        [self.navigationController.view.layer addAnimation:animation forKey:nil];
+        [self.navigationController pushViewController:picker animated:NO];
+        
+      });
+    });
+    dispatch_release(q);  
     
-    picker.personViewDelegate = self;
-    picker.displayedPerson = person;
-    // Allow users to edit the person’s information
-    picker.allowsEditing = NO;
-    picker.title = aContact.contactName;
-    CATransition *animation = [CATransition animation];  
-    //动画时间  
-    animation.duration = 0.5f;  
-    //display mode, slow at beginning and end  
-    animation.timingFunction = UIViewAnimationCurveEaseInOut;  
-    //过渡效果  
-    animation.type = @"pageCurl";  
-    //过渡方向  
-    animation.subtype = kCATransitionFromRight;  
-    //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
-    animation.fillMode = kCAFillModeBackwards;  
-    //动画开始(在整体动画的百分比).  
-    animation.startProgress = 0.3;  
-    // [imageView.layer addAnimation:animation forKey:nil];  
-    // transition.delegate = self;
-    [self.navigationController.view.layer addAnimation:animation forKey:nil];
-    [self.navigationController pushViewController:picker animated:NO];
   } else {
     CompanyOrganizationViewController *covc = [[[CompanyOrganizationViewController alloc] init] autorelease];
     covc.departID = aCompanyOrganization.depart_id;

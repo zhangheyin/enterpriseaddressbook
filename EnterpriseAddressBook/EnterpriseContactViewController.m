@@ -42,17 +42,14 @@
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
     self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
     self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
-    self.company_id = defultCompany.companyID; 
-    self.companyName = defultCompany.companyName;
-    [self initTitleView:defultCompany.companyName];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-      
+
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
     });
   });
+  dispatch_release(q);  
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 
                                                                        green:0x33/255.0 
                                                                         blue:0.f/255.0 
@@ -72,16 +69,14 @@
   self.sortDisplayActionSheet = [[UIActionSheet alloc] init];
   self.companyActionSheet = [[UIActionSheet alloc] init];
   
-  
+  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+  self.company_id = defultCompany.companyID; 
+  self.companyName = defultCompany.companyName;
+  [self initTitleView:self.companyName];  
   //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
   [rightButton release];  
   [leftButton release];
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
-  
-  
-  
-  
-  dispatch_release(q);  
 }
 
 - (void) viewDidAppear:(BOOL)animated {
@@ -95,10 +90,7 @@
     self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
     self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
     
-    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
-    self.company_id = defultCompany.companyID; 
-    self.companyName = defultCompany.companyName;
-    [self initTitleView:defultCompany.companyName];
+
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
@@ -106,7 +98,10 @@
   });
   
   dispatch_release(q);  
-  
+  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+  self.company_id = defultCompany.companyID; 
+  self.companyName = defultCompany.companyName;
+  [self initTitleView:defultCompany.companyName];
 }
 
 - (void) initTitleView:(NSString *)companyName {
@@ -478,73 +473,54 @@ sectionForSectionIndexTitle:(NSString *)title
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  // Navigation logic may go here. Create and push another view controller.
-  /*
-   <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-   // ...
-   // Pass the selected object to the new view controller.
-   [self.navigationController pushViewController:detailViewController animated:YES];
-   [detailViewController release];
-   */
-  // Fetch the address book 
-	//ABAddressBookRef addressBook = ABAddressBookCreate();
-	// Search for the person named "Appleseed" in the address book
-	//NSArray *people = (NSArray *)ABAddressBookCopyPeopleWithName(addressBook, CFSTR("Appleseed"));
-	// Display "Appleseed" information if found in the address book 
-	//if ((people != nil) && [people count])
-	//{
   NSUInteger section = [indexPath section];
   NSUInteger row = [indexPath row];
   //NSLog(@"%@", self.all_keys);
-  
-  EnterpriseContact *aContact;
-  if (tableView == self.searchDisplayController.searchResultsTableView)	{
-    aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-    // NSLog(@"%@", aContact); 
-  } else {
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    EnterpriseContact *aContact;
+    if (tableView == self.searchDisplayController.searchResultsTableView)	{
+      aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
+      // NSLog(@"%@", aContact); 
+    } else {
+      
+      aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
+                        numberOfRowsInSection:section 
+                                   whichIndex:self.sortKindsIndex] objectAtIndex:row];
+    }
+    ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aContact.vcard];
+    ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
+    picker.personViewDelegate = self;
+    picker.displayedPerson = person;
+    // Allow users to edit the person’s information
+    picker.allowsEditing = NO;
+    picker.title = aContact.name;
+
     
-    aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
-                      numberOfRowsInSection:section 
-                                 whichIndex:self.sortKindsIndex] objectAtIndex:row];
-  }
-  ABRecordRef person = [EnterpriseContacts vCardStringtoABRecordRef:aContact.vcard];
-  ABPersonViewController *picker = [[[ABPersonViewController alloc] init] autorelease];
-  picker.personViewDelegate = self;
-  picker.displayedPerson = person;
-  // Allow users to edit the person’s information
-  picker.allowsEditing = NO;
-  picker.title = aContact.name;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      
+      CATransition *animation = [CATransition animation];  
+      //动画时间  
+      animation.duration = 0.5f;  
+      //display mode, slow at beginning and end  
+      animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+      //过渡效果  
+      animation.type = @"pageCurl";  
+      //过渡方向  
+      animation.subtype = kCATransitionFromRight;  
+      //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+      animation.fillMode = kCAFillModeBackwards;  
+      //动画开始(在整体动画的百分比).  
+      animation.startProgress = 0.3;  
+      // [imageView.layer addAnimation:animation forKey:nil];  
+      // transition.delegate = self;
+      [self.navigationController.view.layer addAnimation:animation forKey:nil];
+      [self.navigationController pushViewController:picker animated:NO];
+
+    });
+  });
+  dispatch_release(q);  
   
-  
-  CATransition *animation = [CATransition animation];  
-  //动画时间  
-  animation.duration = 0.5f;  
-  //display mode, slow at beginning and end  
-  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
-  //过渡效果  
-  animation.type = @"pageCurl";  
-  //过渡方向  
-  animation.subtype = kCATransitionFromRight;  
-  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
-  animation.fillMode = kCAFillModeBackwards;  
-  //动画开始(在整体动画的百分比).  
-  animation.startProgress = 0.3;  
-  // [imageView.layer addAnimation:animation forKey:nil];  
-  // transition.delegate = self;
-  [self.navigationController.view.layer addAnimation:animation forKey:nil];
-  [self.navigationController pushViewController:picker animated:NO];
-  //	}
-  //	else 
-  //	{
-  //		// Show an alert if "Appleseed" is not in Contacts
-  //		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" 
-  //                                                    message:@"Could not find Appleseed in the Contacts application" 
-  //                                                   delegate:nil 
-  //                                          cancelButtonTitle:@"Cancel" 
-  //                                          otherButtonTitles:nil];
-  //		[alert show];
-  //		[alert release];
-  //	}
 	
 	//[people release];
 	//CFRelease(addressBook);

@@ -493,7 +493,6 @@ shouldPerformDefaultActionForPerson:(ABRecordRef)person
     
     [CallHistory saveCallRecord:self.callHistory 
                      toFilePath:[CallHistory filePathName]];
-    
   }
   return YES;
 }

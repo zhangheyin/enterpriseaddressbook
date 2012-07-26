@@ -143,6 +143,7 @@
   });
   dispatch_release(q);  
 }
+
 - (void) clearRecord {
   self.clearRecordSheet =  [[UIActionSheet alloc] initWithTitle:@"清空拨号记录" 
                                                        delegate:(id<UIActionSheetDelegate>)self   
@@ -153,7 +154,6 @@
   self.clearRecordSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
   [self.clearRecordSheet showInView:[UIApplication sharedApplication].keyWindow];
-  
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -586,33 +586,40 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText {
   /*执行姓名首字母的*/
-  NSArray *result_of_key_pinyin = [SearchPinYin executePinyinKeySearch2:searchText 
-                                                            addressBook:self.contacts];    
-  /*执行号码的检索*/
-  NSArray *result_of_number_search = [SearchPinYin executeNumberSearch:searchText 
-                                                           addressBook:self.contacts];
-  /*执行全拼的检索*/
-  NSArray *result_of_detail_pinyin = [SearchPinYin executeDetailPinyinSearch:searchText 
-                                                                 addressBook:self.contacts];
-  
-  NSArray *localContactresult = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] 
-                                 arrayByAddingObjectsFromArray:result_of_detail_pinyin];
-  /*----------------------------------------------------------------------------------*/ 
-  NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
-                                                                   addressBook:self.enterpriseContacts];  
-  //执行号码的检索
-  NSArray *resultOfNumberSearch = [EnterpriseSearchPinYin executeNumberSearch:searchText 
-                                                                  addressBook:self.enterpriseContacts];
-  //执行全拼的检索
-  NSArray *resultOfDetailPinyin = [EnterpriseSearchPinYin executeDetailPinyinSearch:searchText 
-                                                                        addressBook:self.enterpriseContacts];
-  
-  NSArray *enterpriseContatsResult = [[resultOfKeyPinyin arrayByAddingObjectsFromArray:resultOfNumberSearch] arrayByAddingObjectsFromArray:resultOfDetailPinyin];
-  //NSLog(@"%@", final_result);    
-  NSSet *set = [NSSet setWithArray:enterpriseContatsResult];
-  self.filteredListContent =  [localContactresult arrayByAddingObjectsFromArray:[set allObjects]];
-  // NSLog(@"localContactresult %i enterpriseContatsResult %i filteredListContent %i", [localContactresult count],[[set allObjects] count], [self.filteredListContent count]);
-  [self.table reloadData];
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    NSArray *result_of_key_pinyin = [SearchPinYin executePinyinKeySearch2:searchText 
+                                                              addressBook:self.contacts];    
+    /*执行号码的检索*/
+    NSArray *result_of_number_search = [SearchPinYin executeNumberSearch:searchText 
+                                                             addressBook:self.contacts];
+    /*执行全拼的检索*/
+    NSArray *result_of_detail_pinyin = [SearchPinYin executeDetailPinyinSearch:searchText 
+                                                                   addressBook:self.contacts];
+    
+    NSArray *localContactresult = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] 
+                                   arrayByAddingObjectsFromArray:result_of_detail_pinyin];
+    /*----------------------------------------------------------------------------------*/ 
+    NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
+                                                                     addressBook:self.enterpriseContacts];  
+    //执行号码的检索
+    NSArray *resultOfNumberSearch = [EnterpriseSearchPinYin executeNumberSearch:searchText 
+                                                                    addressBook:self.enterpriseContacts];
+    //执行全拼的检索
+    NSArray *resultOfDetailPinyin = [EnterpriseSearchPinYin executeDetailPinyinSearch:searchText 
+                                                                          addressBook:self.enterpriseContacts];
+    
+    NSArray *enterpriseContatsResult = [[resultOfKeyPinyin arrayByAddingObjectsFromArray:resultOfNumberSearch] arrayByAddingObjectsFromArray:resultOfDetailPinyin];
+    //NSLog(@"%@", final_result);    
+    NSSet *set = [NSSet setWithArray:enterpriseContatsResult];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{ 
+      //NSLog(@"DFSDFAS %@", self.call_history);
+      self.filteredListContent =  [localContactresult arrayByAddingObjectsFromArray:[set allObjects]];
+      [self.table reloadData];
+    });
+  });
+  dispatch_release(q);   
 }
 
 - (void)dealloc {
