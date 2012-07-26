@@ -553,9 +553,9 @@
   [self.single_call_history setObject:contactName forKey:kMain]; 
   
   if ([contactName isEqualToString:callNumber]) {
-    [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
-  } else {
     [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+  } else {
+    [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
   }
   
   [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
