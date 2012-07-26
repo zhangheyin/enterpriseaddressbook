@@ -144,16 +144,16 @@
   dispatch_release(q);  
 }
 - (void) clearRecord {
- self.clearRecordSheet =  [[UIActionSheet alloc] initWithTitle:@"清空拨号记录" 
-                                                          delegate:(id<UIActionSheetDelegate>)self   
-                                                 cancelButtonTitle:@"取消"
-                                            destructiveButtonTitle:nil//@"修改联系人" 
-                                                 otherButtonTitles:@"确定", nil];
+  self.clearRecordSheet =  [[UIActionSheet alloc] initWithTitle:@"清空拨号记录" 
+                                                       delegate:(id<UIActionSheetDelegate>)self   
+                                              cancelButtonTitle:@"取消"
+                                         destructiveButtonTitle:nil//@"修改联系人" 
+                                              otherButtonTitles:@"确定", nil];
   
   self.clearRecordSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
   [self.clearRecordSheet showInView:[UIApplication sharedApplication].keyWindow];
-
+  
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
@@ -381,10 +381,10 @@
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     
     //NSLog(@"[current timeIntervalSince1970]   %@", current);
-   // NSLog(@"[date timeIntervalSince1970]      %@", date);
+    // NSLog(@"[date timeIntervalSince1970]      %@", date);
     NSString *formatString = [self dateFormaterString:(NSInteger)[current timeIntervalSince1970] - (NSInteger)[date timeIntervalSince1970]];
     if (![formatString isEqualToString:@"昨天"]) {
-      NSLog(@"%@", formatString);
+      //NSLog(@"%@", formatString);
       [dateFormatter setDateFormat:formatString];
       cell.dialTime = [dateFormatter stringFromDate:date];
     } else {
@@ -467,8 +467,7 @@
       //[self.dialView setHidden:YES];
       [self toHidden];
     } else {
-
-
+      
       id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
       if ([aContact isKindOfClass:[NSDictionary class]]) {
         
@@ -476,7 +475,7 @@
         contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
         ABContact *abContact = [contact_dict objectForKey:kContact];
         //NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
-                
+        
         self.dialSheet = [[UIActionSheet alloc] initWithTitle:abContact.contactName  
                                                      delegate:self  
                                             cancelButtonTitle:nil  
@@ -493,7 +492,6 @@
         self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
         [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
         
-
       } else {
         EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
         self.dialSheet = [[UIActionSheet alloc] initWithTitle:eContact.name 
@@ -502,7 +500,7 @@
                                        destructiveButtonTitle:nil  
                                             otherButtonTitles:nil];  
         // 逐个添加按钮（比如可以是数组循环）  
-          [self.dialSheet addButtonWithTitle:eContact.phone_number];
+        [self.dialSheet addButtonWithTitle:eContact.phone_number];
         
         // 同时添加一个取消按钮  
         [self.dialSheet addButtonWithTitle:@"取消"];  
@@ -522,7 +520,7 @@
       EnterpriseContact *eContact = [EnterpriseSearchPinYin absoluteMatch:callNumber 
                                                               addressBook:self.enterpriseContacts];
       //NSLog(@"%@", eContact.phone_number);
-
+      
       // 逐个添加按钮（比如可以是数组循环）  
       if (abContact != nil) {
         callName = abContact.contactName; 
@@ -559,7 +557,6 @@
   } else {
     [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
   }
-  
   
   [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
   [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];

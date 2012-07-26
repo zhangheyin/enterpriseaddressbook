@@ -34,6 +34,25 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+
+    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+    //NSLog(@"%@", self.enterprise_contacts);
+    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+    self.company_id = defultCompany.companyID; 
+    self.companyName = defultCompany.companyName;
+    [self initTitleView:defultCompany.companyName];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+      [self.tableView reloadData];
+    });
+  });
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 
                                                                        green:0x33/255.0 
                                                                         blue:0.f/255.0 
@@ -52,10 +71,7 @@
 
   self.sortDisplayActionSheet = [[UIActionSheet alloc] init];
   self.companyActionSheet = [[UIActionSheet alloc] init];
-  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
-  self.company_id = defultCompany.companyID; 
-  self.companyName = defultCompany.companyName;
-  [self initTitleView:defultCompany.companyName];
+
   
   //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
   [rightButton release];  
@@ -63,19 +79,7 @@
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   
   
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
-    [self copyFileDatabase];
-    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
-    //NSLog(@"%@", self.enterprise_contacts);
-    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
-    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
-    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
-      [self.tableView reloadData];
-    });
-  });
+
   
   dispatch_release(q);  
 }
@@ -90,6 +94,11 @@
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
     self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
     self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    
+    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+    self.company_id = defultCompany.companyID; 
+    self.companyName = defultCompany.companyName;
+    [self initTitleView:defultCompany.companyName];
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
@@ -126,23 +135,6 @@
   self.navigationItem.titleView = titleView;
   [titleView release];//release titleView
   
-}
-
--(void)copyFileDatabase {
-  NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory,NSUserDomainMask, YES);
-  NSString *documentsDirectory = [paths objectAtIndex:0];   
-  NSString *documentLibraryFolderPath = [documentsDirectory stringByAppendingPathComponent:@"ycontacts.db"];
-  if ([[NSFileManager defaultManager] fileExistsAtPath:documentLibraryFolderPath]) {
-    NSLog(@"文件已经存在了");
-  }else {
-    NSString *resourceSampleImagesFolderPath =[[NSBundle mainBundle]
-                                               pathForResource:@"ycontacts.db"
-                                               ofType:nil];
-    NSData *mainBundleFile = [NSData dataWithContentsOfFile:resourceSampleImagesFolderPath];
-    [[NSFileManager defaultManager] createFileAtPath:documentLibraryFolderPath
-                                            contents:mainBundleFile
-                                          attributes:nil];
-  }
 }
 
 - (void)viewDidUnload {
@@ -345,11 +337,11 @@
     UIImageView *contact_image = (UIImageView *)[cell viewWithTag:1000];
     UILabel *name_lable = (UILabel *)[cell viewWithTag:1010];
   //  UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
-    UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
+  //  UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
     
     name_lable.text = aContact.name;//[contact.contactName isEqualToString:@""] ? contact.emailaddresses : contact.contactName;
    // pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
-    number_lable.text = aContact.phone_number;//contact.phonenumbers;
+   // number_lable.text = aContact.phone_number;//contact.phonenumbers;
     contact_image.image = [UIImage imageNamed:@"Avatar.png"];
     return cell;
   } else {

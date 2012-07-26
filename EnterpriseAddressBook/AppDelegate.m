@@ -22,7 +22,26 @@
   [super dealloc];
 }
 
+- (void)copyFileDatabase {
+  NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory,NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];   
+  NSString *documentLibraryFolderPath = [documentsDirectory stringByAppendingPathComponent:@"ycontacts.db"];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:documentLibraryFolderPath]) {
+    NSLog(@"文件已经存在了");
+  }else {
+    NSString *resourceSampleImagesFolderPath =[[NSBundle mainBundle]
+                                               pathForResource:@"ycontacts.db"
+                                               ofType:nil];
+    NSData *mainBundleFile = [NSData dataWithContentsOfFile:resourceSampleImagesFolderPath];
+    [[NSFileManager defaultManager] createFileAtPath:documentLibraryFolderPath
+                                            contents:mainBundleFile
+                                          attributes:nil];
+  }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [self copyFileDatabase];
+  
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
   UITabBarItem *dialTab = [[UITabBarItem alloc] initWithTitle:@"拨号" 
                                                         image:[UIImage imageNamed:@"bg_tab_dial_pressed.png"]

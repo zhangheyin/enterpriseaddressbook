@@ -31,7 +31,7 @@
                      numberOfRowsInSection:(NSUInteger)section 
                                 whichIndex:(NSInteger)sortIndex;
 - (void) initTitleView:(NSString *)companyName;
-- (void) copyFileDatabase;
+
 - (void) sortKind;
 - (void) intoCompanyOrganization;
 @end
