@@ -41,7 +41,7 @@
       [all_enterprise_name_array addObject:aCompany];       
     }
     [rs close];
-    NSLog(@"%@", all_enterprise_name_array);
+    //NSLog(@"%@", all_enterprise_name_array);
     return all_enterprise_name_array;
   }
 }

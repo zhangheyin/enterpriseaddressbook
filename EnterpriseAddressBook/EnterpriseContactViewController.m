@@ -11,6 +11,8 @@
 #import "EnterpriseContact.h"
 #import "ContactItemCell.h"
 #import "CompanyOrganizationViewController.h"
+#import "EnterpriseNameDatabase.h"
+#import "Company.h"
 @interface EnterpriseContactViewController ()
 
 @end
@@ -24,6 +26,9 @@
 @synthesize filtered_enterprise_contacts = _filtered_enterprise_contacts;
 @synthesize sortKindsIndex = _sortKindsIndex;
 @synthesize allDepartments = _allDepartments;
+@synthesize companyActionSheet = _companyActionSheet;
+@synthesize sortDisplayActionSheet = _sortDisplayActionSheet;
+
 
 - (void)viewDidLoad {
   [super viewDidLoad];
@@ -39,20 +44,29 @@
   UIBarButtonItem *leftButton   = [[UIBarButtonItem alloc]initWithTitle:@"组织结构" 
                                                                 style:UIBarButtonItemStyleBordered 
                                                                target:self 
-                                                               action:@selector(intoCompanyOrganization)];
+                                   action:@selector(intoCompanyOrganization)];
   self.navigationItem.rightBarButtonItem = rightButton;
   self.navigationItem.leftBarButtonItem = leftButton;
+
+  self.sortDisplayActionSheet = [[UIActionSheet alloc] init];
+  self.companyActionSheet = [[UIActionSheet alloc] init];
+  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+  self.company_id = defultCompany.companyID; 
+  [self initTitleView:defultCompany.companyName];
   
+  //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
   [rightButton release];  
   [leftButton release];
-
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
+  
+  
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
+    [self copyFileDatabase];
     self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
     //NSLog(@"%@", self.enterprise_contacts);
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
-    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
 
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
@@ -61,6 +75,52 @@
   });
   
   dispatch_release(q);  
+}
+
+
+- (void) initTitleView:(NSString *)companyName {
+  UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];//allocate titleView
+  UIButton *btnNormal = [UIButton buttonWithType:UIButtonTypeCustom];
+  [btnNormal setFrame:CGRectMake(0, 0, 150, 20)];
+  [btnNormal addTarget:self action:@selector(companyList) forControlEvents:UIControlEventTouchUpInside];
+  //[btnNormal setBackgroundImage:[UIImage imageNamed:@"icon_question_info.png"] forState:UIControlStateNormal ];
+
+  [btnNormal setTitle:companyName forState:UIControlStateNormal];
+  //[btnNormal setFont:[UIFont systemFontOfSize:8]];
+ // btnNormal.titleLabel.font = [UIFont systemFontOfSize:12];
+  
+  btnNormal.titleLabel.textAlignment = UITextAlignmentCenter;
+  btnNormal.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+  btnNormal.titleLabel.numberOfLines = 0;     // 不可少Label属性之一
+  btnNormal.titleLabel.lineBreakMode = UILineBreakModeCharacterWrap;    // 不可少Label属性之二
+  [titleView addSubview:btnNormal];
+  
+//  UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 100, 20)];//allocate titleText
+//  titleText.textColor = [UIColor whiteColor];
+//  titleText.backgroundColor = [UIColor clearColor];
+//  [titleText setText:companyName];
+//  //[titleView addSubview:titleText];
+//  [titleText release];//release titleText 
+  self.navigationItem.titleView = titleView;
+  [titleView release];//release titleView
+  
+}
+
+-(void)copyFileDatabase {
+  NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory,NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];   
+  NSString *documentLibraryFolderPath = [documentsDirectory stringByAppendingPathComponent:@"ycontacts.db"];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:documentLibraryFolderPath]) {
+    NSLog(@"文件已经存在了");
+  }else {
+    NSString *resourceSampleImagesFolderPath =[[NSBundle mainBundle]
+                                               pathForResource:@"ycontacts.db"
+                                               ofType:nil];
+    NSData *mainBundleFile = [NSData dataWithContentsOfFile:resourceSampleImagesFolderPath];
+    [[NSFileManager defaultManager] createFileAtPath:documentLibraryFolderPath
+                                            contents:mainBundleFile
+                                          attributes:nil];
+  }
 }
 
 - (void)viewDidUnload {
@@ -77,7 +137,7 @@
 - (void) intoCompanyOrganization {
   CompanyOrganizationViewController *covc = [[[CompanyOrganizationViewController alloc] init] autorelease];
   covc.departID = @"0";
-  covc.companyID = @"3";
+  covc.companyID = self.company_id;//@"3";
   covc.title = @"组织结构";
   
   CATransition *animation = [CATransition animation];  
@@ -100,31 +160,61 @@
 }
 
 - (void) sortKind {
-  UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"排序方式" 
+  self.sortDisplayActionSheet = [[UIActionSheet alloc] initWithTitle:@"排序方式" 
                                                           delegate:(id<UIActionSheetDelegate>)self   
-                                                 cancelButtonTitle:nil//@"取消"
+                                                 cancelButtonTitle:@"取消"
                                             destructiveButtonTitle:nil//@"修改联系人" 
                                                  otherButtonTitles:@"按姓名排序", @"按部门排序", nil];
   
-  popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  self.sortDisplayActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
-  [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
-  [popupQuery release];
+  [self.sortDisplayActionSheet showInView:[UIApplication sharedApplication].keyWindow];
+ // [self.sortDisplayActionSheet release];
 }
 
+- (void) companyList {
+  NSMutableArray *companyList = [EnterpriseNameDatabase queryEnterpriseName];
+  self.companyActionSheet = [[UIActionSheet alloc] initWithTitle:@"公司列表"  
+                                                     delegate:self  
+                                            cancelButtonTitle:nil  
+                                       destructiveButtonTitle:nil  
+                                            otherButtonTitles:nil];  
+  // 逐个添加按钮（比如可以是数组循环）  
+  for (Company *aCompany in companyList) {
+    [self.companyActionSheet addButtonWithTitle:aCompany.companyName];
+  }
+  // 同时添加一个取消按钮  
+  [self.companyActionSheet addButtonWithTitle:@"取消"];  
+  // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
+  self.companyActionSheet.cancelButtonIndex = self.companyActionSheet.numberOfButtons-1;
+  self.companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  [self.companyActionSheet showInView:[UIApplication sharedApplication].keyWindow];
+  //[sheet release];
+}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-  switch (buttonIndex) {
-    case 0:
-      self.sortKindsIndex = 0;
-      break;
-    case 1:
-      self.sortKindsIndex = 1;
-      break;
-    default:
-      break;
+  if (actionSheet == self.sortDisplayActionSheet) {
+    switch (buttonIndex) {
+      case 0:
+        self.sortKindsIndex = 0;
+        break;
+      case 1:
+        self.sortKindsIndex = 1;
+        break;
+      default:
+        break;
+    }
+    [self.tableView reloadData];
+  } else {
+    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:buttonIndex];
+    self.company_id = defultCompany.companyID;
+    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+    [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+    [self initTitleView:defultCompany.companyName];
+    [self.tableView reloadData];
   }
-  [self.tableView reloadData];
 }
 #pragma mark - Table view data source
 
@@ -410,7 +500,7 @@ sectionForSectionIndexTitle:(NSString *)title
   
   CATransition *animation = [CATransition animation];  
   //动画时间  
-  animation.duration = 1.0f;  
+  animation.duration = 0.5f;  
   //display mode, slow at beginning and end  
   animation.timingFunction = UIViewAnimationCurveEaseInOut;  
   //过渡效果  
@@ -441,6 +531,8 @@ sectionForSectionIndexTitle:(NSString *)title
 	//[people release];
 	//CFRelease(addressBook);
 }
+
+
 
 /*add 20120710*/
 - (NSArray *)fetchAllPinyinKey:(NSArray*)contacts {
@@ -524,7 +616,8 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [_company_id release];
   [_all_keys release];
   [_allDepartments release];
-  
+  [self.sortDisplayActionSheet release];
+  [self.companyActionSheet release];
   [super dealloc];
 }
 

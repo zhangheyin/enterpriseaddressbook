@@ -11,6 +11,7 @@
 #import "ABContact.h"
 #import "EnterpriseSearchPinYin.h"
 #import <QuartzCore/QuartzCore.h>
+
 @interface EnterpriseContactViewController : UIViewController <ABPersonViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, retain) NSArray *enterprise_contacts;
@@ -20,11 +21,15 @@
 @property (nonatomic) NSInteger sortKindsIndex;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *allDepartments;
+@property (retain, nonatomic) UIActionSheet *companyActionSheet;
+@property (retain, nonatomic) UIActionSheet *sortDisplayActionSheet;
+
 - (NSArray *)fetchAllPinyinKey:(NSArray*)contacts;
 - (NSMutableArray *) fetchContactOnASetion:(NSArray *)contacts
                      numberOfRowsInSection:(NSUInteger)section 
                                 whichIndex:(NSInteger)sortIndex;
-
+- (void) initTitleView:(NSString *)companyName;
+-(void)copyFileDatabase;
 - (void) sortKind;
 - (void) intoCompanyOrganization;
 @end

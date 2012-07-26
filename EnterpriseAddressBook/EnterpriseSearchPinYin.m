@@ -65,7 +65,7 @@
   
  // temp_pinyin_array = searche_result_array;
   //[searche_result_array removeAllObjects];
-  NSLog(@"searche_result_array  %@", searche_result_array);
+ // NSLog(@"searche_result_array  %@", searche_result_array);
  // NSLog(@"%@", single_key_word);
  // NSLog(@"%@", temp_pinyin_array);
   return searche_result_array;

@@ -10,6 +10,11 @@
 #import "SearchPinYin.h"
 #import "CallRecordCell.h"
 #import "CallRecord.h"
+#import "EnterpriseContacts.h"
+#import "Company.h"
+#import "EnterpriseNameDatabase.h"
+#import "EnterpriseSearchPinYin.h"
+#import "EnterpriseContact.h"
 @interface DialViewController ()
 - (void) toHidden;
 - (void) toAppear;
@@ -28,9 +33,9 @@
 @synthesize contacts = _contacts;
 @synthesize filteredListContent = _filteredListContent;
 @synthesize isSearching = _isSearching;
-
-
 @synthesize layer = _layer;
+@synthesize enterpriseContacts = _enterpriseContacts;
+
 - (void) setTelephone_number:(NSString *)telephone_number {
   if (![telephone_number isEqualToString:@""]) {
     [self setIsSearching:YES];
@@ -76,7 +81,15 @@
 
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
-    self.contacts = [ABContactsHelper contacts];    
+    self.contacts = [ABContactsHelper contacts];  
+    NSArray *eContacts = [[[NSArray alloc] init] autorelease];
+    NSMutableArray *companyArray = [EnterpriseNameDatabase queryEnterpriseName];
+    
+    for (Company *aCompany in companyArray) {
+      eContacts = [eContacts arrayByAddingObjectsFromArray:[[EnterpriseContacts contacts:aCompany.companyID] copy]];
+    }
+    NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
+    self.enterpriseContacts = eContacts;
     self.call_history = [self loadCallRecordFromFilePath:[self filePathName]];
     dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
@@ -300,14 +313,24 @@
   CallRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomCellIdentifier];
   
   if (self.isSearching) {
-    NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
-    ABContact *contact = [contact_dict objectForKey:kContact];
-    
-    cell.main = ([contact.contactName isEqualToString:@""]) ? contact.emailaddresses : contact.contactName;
-    cell.number = contact.phonenumbers;
-    cell.dialTime = @"";
-    cell.image = [UIImage imageNamed:@"Avatar.png"];
-    
+    id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
+    NSLog(@"%i", [self.filteredListContent count]);
+    if ([aContact isKindOfClass:[NSDictionary class]]) {
+      NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
+      ABContact *contact = [contact_dict objectForKey:kContact];
+      
+      cell.main = ([contact.contactName isEqualToString:@""]) ? contact.emailaddresses : contact.contactName;
+      cell.number = contact.phonenumbers;
+      cell.dialTime = @"";
+      cell.image = [UIImage imageNamed:@"Avatar.png"];
+    } else {
+      EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
+      
+      cell.main = eContact.name;
+      cell.number = eContact.phone_number;
+      cell.dialTime = @"";
+      cell.image = [UIImage imageNamed:@"ICON_Person.png"];
+    }
   } else {
     
     NSDictionary *call_record = [self.call_history objectAtIndex:([indexPath row])];
@@ -331,6 +354,11 @@
     cell.dialTime = [dateFormatter stringFromDate:date];
   }
   return cell;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+  NSLog(@"scrollViewDidScroll");
 }
 
 - (NSInteger)todayTimeInterval {
@@ -388,7 +416,6 @@
       return indexPath;
     } 
   }
-  
 }  
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -398,6 +425,9 @@
       //[self.dialView setHidden:YES];
       [self toHidden];
     } else {
+      id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
+          if ([aContact isKindOfClass:[NSDictionary class]]) {
+            
       NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
       contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
       ABContact *abContact = [contact_dict objectForKey:kContact];
@@ -422,6 +452,22 @@
       [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
       self.telephone_number = @"";
       [self.table reloadData];
+          } else {
+            EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eContact.phone_number]];
+            self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
+            [self.single_call_history setObject:eContact.name forKey:kMain]; 
+            [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+            
+            [self.single_call_history setObject:eContact.phone_number forKey:kTelephoneNumber];
+            [self.single_call_history setObject:[self dialTime] forKey:kDialTime];
+            [self.call_history insertObject:self.single_call_history atIndex:0];  
+            
+            [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+            [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
+            self.telephone_number = @"";
+            [self.table reloadData];
+          }
     }    
   } else {
     if (self.isHidden) {
@@ -487,9 +533,33 @@
                                                                  addressBook:self.contacts];
   
   //NSLog(@"~~~~~~2~~~~~~~");        
-  NSArray *final_result = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] arrayByAddingObjectsFromArray:result_of_detail_pinyin];
+  NSArray *localContactresult = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] arrayByAddingObjectsFromArray:result_of_detail_pinyin];
   //NSLog(@"filterContentForSearchText finish");
-  self.filteredListContent = [final_result copy];
+  //self.filteredListContent = [final_result copy];
+  
+  
+  
+  NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
+                                                                   addressBook:self.enterpriseContacts];  
+  //执行号码的检索
+  //[self fetchContacts];
+  NSArray *resultOfNumberSearch = [EnterpriseSearchPinYin executeNumberSearch:searchText 
+                                                                  addressBook:self.enterpriseContacts];
+  //执行全拼的检索
+  //[self fetchContacts];
+  NSArray *resultOfDetailPinyin = [EnterpriseSearchPinYin executeDetailPinyinSearch:searchText 
+                                                                        addressBook:self.enterpriseContacts];
+  //NSLog(@"~~~~~~2~~~~~~~");    
+  NSArray *enterpriseContatsResult = [[resultOfKeyPinyin arrayByAddingObjectsFromArray:resultOfNumberSearch] arrayByAddingObjectsFromArray:resultOfDetailPinyin];
+  //NSLog(@"%@", final_result);    
+  NSSet *set = [NSSet setWithArray:enterpriseContatsResult];
+  
+  //[set allObjects];
+  self.filteredListContent =  [localContactresult arrayByAddingObjectsFromArray:[set allObjects]];
+  
+  NSLog(@"localContactresult %i enterpriseContatsResult %i filteredListContent %i", [localContactresult count],[[set allObjects] count], [self.filteredListContent count]);
+  
+  
   [self.table reloadData];
 }
 
@@ -504,6 +574,7 @@
   [_single_call_history release];
   [_call_history release];
   [self.layer release];
+  [self.enterpriseContacts release];
   [super dealloc];
 }
 @end

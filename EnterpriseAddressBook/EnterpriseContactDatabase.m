@@ -20,7 +20,7 @@
   return self;
 }
 
-+ (NSMutableArray *)queryAllEnterpriseDepartments {
++ (NSMutableArray *)queryAllEnterpriseDepartments:(NSString *)company_id {
   NSMutableArray *allEnterpriseStructs = [[[NSMutableArray alloc] init] autorelease];
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
   NSString *documentDirectory = [paths objectAtIndex:0];
@@ -32,7 +32,7 @@
     NSLog(@"Could not open db.");
     return nil;
   } else {
-    FMResultSet *rs = [db executeQuery:@"select struct_id, name from org;"];//, company_id];
+    FMResultSet *rs = [db executeQuery:@"select struct_id, name from org where company_id = ?;", company_id];
     while ([rs next]) {
       NSDictionary *aEnterpriseStruct = [NSDictionary dictionaryWithObject:[rs stringForColumn:@"name"] forKey:[rs stringForColumn:@"struct_id"]];
       [allEnterpriseStructs addObject:aEnterpriseStruct];
@@ -55,7 +55,7 @@
     NSLog(@"Could not open db.");
     return nil;
   } else {
-    FMResultSet *rs = [db executeQuery:@"select * from data;"];
+    FMResultSet *rs = [db executeQuery:@"select * from data where company_id = ?", company_id];
     while ([rs next]) {
       EnterpriseContact *aContact = [[EnterpriseContact alloc] init] ;
       aContact.contact_id   = [rs stringForColumn:@"contact_id"];

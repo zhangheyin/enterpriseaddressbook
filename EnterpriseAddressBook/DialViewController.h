@@ -27,6 +27,10 @@ static NSString *kDialTime = @"dialtime";
 @property (retain, nonatomic) NSMutableDictionary* single_call_history;
 @property (retain, nonatomic) NSMutableArray* call_history;
 @property BOOL isSearching;
+@property (retain, nonatomic) NSArray *enterpriseContacts;
+
+
+
 - (void)fetchContacts;
 - (IBAction)dialNumber:(UIButton *)sender;
 - (void)filterContentForSearchText:(NSString*)searchText;

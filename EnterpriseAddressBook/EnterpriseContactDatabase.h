@@ -10,5 +10,5 @@
 
 @interface EnterpriseContactDatabase
 + (NSMutableArray *)queryAllEnterpriseContacts2:(NSString *)company_id;
-+ (NSMutableArray *)queryAllEnterpriseDepartments;
++ (NSMutableArray *)queryAllEnterpriseDepartments:(NSString *)company_id;
 @end

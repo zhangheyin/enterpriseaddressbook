@@ -133,7 +133,7 @@
     picker.title = aContact.contactName;
     CATransition *animation = [CATransition animation];  
     //动画时间  
-    animation.duration = 1.0f;  
+    animation.duration = 0.5f;  
     //display mode, slow at beginning and end  
     animation.timingFunction = UIViewAnimationCurveEaseInOut;  
     //过渡效果  

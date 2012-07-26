@@ -87,6 +87,7 @@
     self.all_keys = [self fetchAllKey:self.contacts];
     dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
       [self.tableView reloadData];
     });
   });
@@ -140,6 +141,13 @@
 
 - (IBAction)toggleEdit {
   [self.tableView setEditing:!self.tableView.editing animated:YES];
+  
+  
+  UIBarButtonItem *leftButton  = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleBordered target:self action:@selector(leaveEditMode)];
+  
+  self.navigationItem.leftBarButtonItem = leftButton;
+  [leftButton release]; 
+  
 //  
 //  if (self.tableView.editing)
 //    [self.navigationItem.rightBarButtonItem setTitle:@"done"];
@@ -255,6 +263,7 @@
       self.contacts = [ABContactsHelper contacts]; 
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView setEditing:NO animated:YES];   
+        [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
         [self.tableView reloadData];
       });
     });
@@ -282,6 +291,7 @@
 -(void)leaveEditMode {
 	[self.tableView setEditing:NO animated:YES];
 	[self setBarButtonItems];
+  self.navigationItem.leftBarButtonItem = nil;
 }
 
 -(void)enterEditMode
@@ -327,7 +337,6 @@ sectionForSectionIndexTitle:(NSString *)title
 }
 
 #pragma mark - Table view delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   NSUInteger section = [indexPath section];
   NSUInteger row = [indexPath row];
@@ -351,7 +360,7 @@ sectionForSectionIndexTitle:(NSString *)title
   
   CATransition *animation = [CATransition animation];  
   //动画时间  
-  animation.duration = 1.0f;  
+  animation.duration = 0.5f;  
   //display mode, slow at beginning and end  
   animation.timingFunction = UIViewAnimationCurveEaseInOut;  
   //过渡效果  
@@ -378,9 +387,6 @@ sectionForSectionIndexTitle:(NSString *)title
   //});
   
   // dispatch_release(q);  
-  
-  
-  
   // [self performSelectorOnMainThread:@selector(fetch) withObject:nil waitUntilDone:NO];
 }
 
@@ -401,7 +407,6 @@ sectionForSectionIndexTitle:(NSString *)title
   //[self fetchContacts];
   NSArray *result_of_detail_pinyin = [SearchPinYin executeDetailPinyinSearch:searchText 
                                                                  addressBook:self.contacts];
-  
   //NSLog(@"~~~~~~2~~~~~~~");        
   NSArray *final_result = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] arrayByAddingObjectsFromArray:result_of_detail_pinyin];
  // NSLog(@"filterContentForSearchText finish");

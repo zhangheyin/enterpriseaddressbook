@@ -105,6 +105,7 @@
 		8467262415BE6BB7009F5272 /* bg_tab_sms_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467262315BE6BB7009F5272 /* bg_tab_sms_pressed.png */; };
 		8496974515B6465600C72EEF /* ContactItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8496974215B6465600C72EEF /* ContactItemCell.m */; };
 		8496974615B6465600C72EEF /* ContactItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8496974415B6465600C72EEF /* ContactItemCell.xib */; };
+		84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C1912215BF8FD1005AD8D3 /* DropDownList.m */; };
 		84C8116515B7D89F00C97A1A /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84C8116315B7D89F00C97A1A /* Icon.png */; };
 		84CB78BA15B7D04700936965 /* Avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CB78B915B7D04700936965 /* Avatar.png */; };
 		84F22FE115B53F00005CF86E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22FE015B53F00005CF86E /* UIKit.framework */; };
@@ -243,6 +244,8 @@
 		8496974215B6465600C72EEF /* ContactItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactItemCell.m; sourceTree = "<group>"; };
 		8496974315B6465600C72EEF /* ContactItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactItemCell.h; sourceTree = "<group>"; };
 		8496974415B6465600C72EEF /* ContactItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactItemCell.xib; sourceTree = "<group>"; };
+		84C1912115BF8FD1005AD8D3 /* DropDownList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropDownList.h; sourceTree = "<group>"; };
+		84C1912215BF8FD1005AD8D3 /* DropDownList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropDownList.m; sourceTree = "<group>"; };
 		84C8116215B7D89F00C97A1A /* Icon_2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_2x.png; sourceTree = "<group>"; };
 		84C8116315B7D89F00C97A1A /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		84CB78B415B7AA4100936965 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "/Users/admin/Desktop/MyTest/EnterpriseAddressBook/EnterpriseAddressBook/zh-Hans.lproj/DialViewController.xib"; sourceTree = "<absolute>"; };
@@ -466,6 +469,8 @@
 				84F230A815B54270005CF86E /* AddressBook */,
 				84F2309E15B5421B005CF86E /* PinYin */,
 				84F22FE715B53F00005CF86E /* Supporting Files */,
+				84C1912115BF8FD1005AD8D3 /* DropDownList.h */,
+				84C1912215BF8FD1005AD8D3 /* DropDownList.m */,
 			);
 			path = EnterpriseAddressBook;
 			sourceTree = "<group>";
@@ -771,6 +776,7 @@
 				84541BA515B692B10079FF96 /* ABGroup.m in Sources */,
 				8466C6A415BCF2AE00607A3C /* CompanyOrganizationViewController.m in Sources */,
 				8467261C15BE4700009F5272 /* Company.m in Sources */,
+				84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -803,6 +809,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -818,7 +825,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
 			};
 			name = Debug;
 		};
@@ -827,6 +836,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -836,7 +846,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -845,7 +857,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EnterpriseAddressBook/EnterpriseAddressBook-Prefix.pch";
 				INFOPLIST_FILE = "EnterpriseAddressBook/EnterpriseAddressBook-Info.plist";
@@ -860,7 +872,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EnterpriseAddressBook/EnterpriseAddressBook-Prefix.pch";
 				INFOPLIST_FILE = "EnterpriseAddressBook/EnterpriseAddressBook-Info.plist";
@@ -882,7 +894,7 @@
 				84F2300715B53F00005CF86E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		84F2300815B53F00005CF86E /* Build configuration list for PBXNativeTarget "EnterpriseAddressBook" */ = {
 			isa = XCConfigurationList;
@@ -891,7 +903,7 @@
 				84F2300A15B53F00005CF86E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
