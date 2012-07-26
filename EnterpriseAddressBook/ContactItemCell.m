@@ -12,12 +12,12 @@
 
 @synthesize name_lable = _name_lable;
 //@synthesize pinyin_lable = _pinyin_lable;
-@synthesize number_lable = _number_lable;
+//@synthesize number_lable = _number_lable;
 @synthesize thumbnailView = _thumbnailView;
 
 @synthesize name = _name;
 //@synthesize pinyin = _pinyin;
-@synthesize number = _number;
+//@synthesize number = _number;
 @synthesize image = _image;
 
 - (void) setName:(NSString *)aName
@@ -44,13 +44,13 @@
     }   
 }
 
-- (void)setNumber:(NSString *) aNumber
-{
-    if (![aNumber isEqual:self.name]) {
-        _number = [aNumber copy];
-        self.number_lable.text = _number;
-    }
-}
+//- (void)setNumber:(NSString *) aNumber
+//{
+//    if (![aNumber isEqual:self.name]) {
+//        _number = [aNumber copy];
+//        self.number_lable.text = _number;
+//    }
+//}
 //@synthesize controller;
 //@synthesize tableView;
 /*
@@ -71,7 +71,7 @@
 - (void)dealloc {
     [_thumbnailView release];
     [_name_lable release];
-    [_number_lable release];
+//    [_number_lable release];
   //  [_pinyin_lable release];
     [super dealloc];
 }

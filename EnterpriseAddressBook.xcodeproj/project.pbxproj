@@ -103,6 +103,7 @@
 		8467262015BE6B90009F5272 /* bg_tab_dial_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467261F15BE6B90009F5272 /* bg_tab_dial_pressed.png */; };
 		8467262215BE6B9C009F5272 /* bg_tab_contact_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467262115BE6B9C009F5272 /* bg_tab_contact_pressed.png */; };
 		8467262415BE6BB7009F5272 /* bg_tab_sms_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 8467262315BE6BB7009F5272 /* bg_tab_sms_pressed.png */; };
+		848744D515C0D350007AE0FC /* CallHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 848744D415C0D350007AE0FC /* CallHistory.m */; };
 		8496974515B6465600C72EEF /* ContactItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8496974215B6465600C72EEF /* ContactItemCell.m */; };
 		8496974615B6465600C72EEF /* ContactItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8496974415B6465600C72EEF /* ContactItemCell.xib */; };
 		84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C1912215BF8FD1005AD8D3 /* DropDownList.m */; };
@@ -241,6 +242,8 @@
 		8467261F15BE6B90009F5272 /* bg_tab_dial_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_tab_dial_pressed.png; sourceTree = "<group>"; };
 		8467262115BE6B9C009F5272 /* bg_tab_contact_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_tab_contact_pressed.png; sourceTree = "<group>"; };
 		8467262315BE6BB7009F5272 /* bg_tab_sms_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_tab_sms_pressed.png; sourceTree = "<group>"; };
+		848744D315C0D350007AE0FC /* CallHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallHistory.h; sourceTree = "<group>"; };
+		848744D415C0D350007AE0FC /* CallHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallHistory.m; sourceTree = "<group>"; };
 		8496974215B6465600C72EEF /* ContactItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactItemCell.m; sourceTree = "<group>"; };
 		8496974315B6465600C72EEF /* ContactItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactItemCell.h; sourceTree = "<group>"; };
 		8496974415B6465600C72EEF /* ContactItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactItemCell.xib; sourceTree = "<group>"; };
@@ -471,6 +474,8 @@
 				84F22FE715B53F00005CF86E /* Supporting Files */,
 				84C1912115BF8FD1005AD8D3 /* DropDownList.h */,
 				84C1912215BF8FD1005AD8D3 /* DropDownList.m */,
+				848744D315C0D350007AE0FC /* CallHistory.h */,
+				848744D415C0D350007AE0FC /* CallHistory.m */,
 			);
 			path = EnterpriseAddressBook;
 			sourceTree = "<group>";
@@ -777,6 +782,7 @@
 				8466C6A415BCF2AE00607A3C /* CompanyOrganizationViewController.m in Sources */,
 				8467261C15BE4700009F5272 /* Company.m in Sources */,
 				84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */,
+				848744D515C0D350007AE0FC /* CallHistory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

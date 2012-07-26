@@ -10,10 +10,7 @@
 #import "DialView.h"
 #import <QuartzCore/QuartzCore.h>
 
-static NSString *kTelephoneNumber = @"telephonenumber";
-static NSString *kHaveContacts = @"havecontacts";
-static NSString *kMain = @"main";
-static NSString *kDialTime = @"dialtime";
+
 @interface DialViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, assign) CALayer *layer;
 @property (retain, nonatomic) IBOutlet UILabel *diaplayLable;
@@ -35,6 +32,6 @@ static NSString *kDialTime = @"dialtime";
 - (IBAction)dialNumber:(UIButton *)sender;
 - (void)filterContentForSearchText:(NSString*)searchText;
 - (IBAction)back:(UIButton *)sender;
-- (NSDate *)dialTime;
+
 
 @end

@@ -8,6 +8,7 @@
 #define SYSBARBUTTON(ITEM, SELECTOR) [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:ITEM target:self action:SELECTOR] autorelease]
 #import "ContactsViewController.h"
 #import "ContactItemCell.h"
+#import "CallHistory.h"
 @interface ContactsViewController ()
 
 @end
@@ -19,7 +20,7 @@
 @synthesize filteredListContent = _filteredListContent;
 @synthesize all_keys = _all_keys;
 
-
+@synthesize callHistory = _callHistory;
 
 - (void)viewDidLoad {
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
@@ -36,6 +37,7 @@
     self.all_keys = [self fetchAllKey:self.contacts];
     dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
+      self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
       [self.tableView reloadData];
     });
@@ -79,14 +81,15 @@
   // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated]; 
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts]; 
     self.all_keys = [self fetchAllKey:self.contacts];
     dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
+      self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
       [self.tableView reloadData];
     });
@@ -196,11 +199,11 @@
     UIImageView *contact_image = (UIImageView *)[cell viewWithTag:1000];
     UILabel *name_lable = (UILabel *)[cell viewWithTag:1010];
    // UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
-    UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
+//    UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
     
     name_lable.text = [contact.contactName isEqualToString:@""] ? @"未命名" : contact.contactName;
    // pinyin_lable.text = [contact_dict objectForKey:kNamePinyin];
-    number_lable.text = [contact.phoneArray objectAtIndex:0];
+ //   number_lable.text = [contact.phoneArray objectAtIndex:0];
     contact_image.image = [UIImage imageNamed:@"Avatar.png"];
     return cell;
   }	else {
@@ -224,7 +227,7 @@
     
     ABContact *contact = [contact_dict_section objectForKey:kContact];
     cell.name = [contact.contactName isEqualToString:@""] ? @"未命名" : contact.contactName;
-    cell.number = [contact.phoneArray objectAtIndex:0];
+//    cell.number = [contact.phoneArray objectAtIndex:0];
   //  cell.pinyin = [contact_dict_section objectForKey:kNamePinyin];
     cell.image = (contact.image) ? contact.image : [UIImage imageNamed:@"Avatar.png"];
     
@@ -475,7 +478,22 @@ sectionForSectionIndexTitle:(NSString *)title
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
-	return YES;
+  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+  //电话号码
+  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+  ABContact *aContact = [ABContact contactWithRecord:person];
+  
+  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+  [singleCall setObject:aContact.contactName    forKey:kMain]; 
+  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+  [self.callHistory insertObject:singleCall atIndex:0];  
+
+  [CallHistory saveCallRecord:self.callHistory 
+                   toFilePath:[CallHistory filePathName]];
+  
+  return YES;
 }
 
 

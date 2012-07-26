@@ -37,7 +37,7 @@
   // Override point for customization after application launch.
   UIViewController *contactsViewController = [[[ContactsViewController alloc] initWithNibName:@"ContactsViewController" bundle:nil] autorelease];
   UIViewController *dialViewController = [[[DialViewController alloc] initWithNibName:@"DialViewController" bundle:nil] autorelease];
-  UIViewController *enterpriseNameViewController = [[EnterpriseNameViewController alloc] initWithNibName:@"EnterpriseNameViewController" bundle:nil];
+//  UIViewController *enterpriseNameViewController = [[EnterpriseNameViewController alloc] initWithNibName:@"EnterpriseNameViewController" bundle:nil];
   UIViewController *enterpriseContactViewController = [[[EnterpriseContactViewController alloc] initWithNibName:@"EnterpriseContactViewController" bundle:nil] autorelease];
   
   UINavigationController *aNavigationController1 = [[[UINavigationController alloc] initWithRootViewController:dialViewController] autorelease];
@@ -57,7 +57,7 @@
   [aNavigationController3.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   
   self.tabBarController = [[[MainViewController alloc] init] autorelease];
-  self.tabBarController.viewControllers = [NSArray arrayWithObjects:aNavigationController1, aNavigationController2, aNavigationController3, enterpriseNameViewController, nil];
+  self.tabBarController.viewControllers = [NSArray arrayWithObjects:aNavigationController1, aNavigationController2, aNavigationController3, nil];
   
   self.window.rootViewController = self.tabBarController;
   [self.window makeKeyAndVisible];

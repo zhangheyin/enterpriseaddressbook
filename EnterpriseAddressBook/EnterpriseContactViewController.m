@@ -13,6 +13,7 @@
 #import "CompanyOrganizationViewController.h"
 #import "EnterpriseNameDatabase.h"
 #import "Company.h"
+#import "CallHistory.h"
 @interface EnterpriseContactViewController ()
 
 @end
@@ -28,7 +29,8 @@
 @synthesize allDepartments = _allDepartments;
 @synthesize companyActionSheet = _companyActionSheet;
 @synthesize sortDisplayActionSheet = _sortDisplayActionSheet;
-
+@synthesize callHistory = _callHistory;
+@synthesize companyName = _companyName;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
@@ -52,6 +54,7 @@
   self.companyActionSheet = [[UIActionSheet alloc] init];
   Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
   self.company_id = defultCompany.companyID; 
+  self.companyName = defultCompany.companyName;
   [self initTitleView:defultCompany.companyName];
   
   //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
@@ -67,7 +70,7 @@
     //NSLog(@"%@", self.enterprise_contacts);
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
     self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
-
+    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
     dispatch_async(dispatch_get_main_queue(), ^{
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
@@ -77,6 +80,25 @@
   dispatch_release(q);  
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    //[self copyFileDatabase];
+    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+    //NSLog(@"%@", self.enterprise_contacts);
+    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+      [self.tableView reloadData];
+    });
+  });
+  
+  dispatch_release(q);  
+
+}
 
 - (void) initTitleView:(NSString *)companyName {
   UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];//allocate titleView
@@ -138,7 +160,8 @@
   CompanyOrganizationViewController *covc = [[[CompanyOrganizationViewController alloc] init] autorelease];
   covc.departID = @"0";
   covc.companyID = self.company_id;//@"3";
-  covc.title = @"组织结构";
+  covc.companyName = self.companyName;
+  //covc.title = @"组织结构";
   
   CATransition *animation = [CATransition animation];  
   //动画时间  
@@ -206,14 +229,17 @@
     }
     [self.tableView reloadData];
   } else {
-    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:buttonIndex];
-    self.company_id = defultCompany.companyID;
-    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
-    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
-    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
-    [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
-    [self initTitleView:defultCompany.companyName];
-    [self.tableView reloadData];
+    if  (buttonIndex < [[EnterpriseNameDatabase queryEnterpriseName] count]) {
+      Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:buttonIndex];
+      self.company_id = defultCompany.companyID;
+      self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+      self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+      self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+      [self initTitleView:defultCompany.companyName];
+      self.companyName = defultCompany.companyName;
+      [self.tableView reloadData];
+    }
   }
 }
 #pragma mark - Table view data source
@@ -349,7 +375,7 @@
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
     
     cell.name = aContact.name;
-    cell.number = aContact.phone_number;
+//    cell.number = aContact.phone_number;
    // cell.pinyin = aContact.name_pinyin;
     cell.image =  [UIImage imageNamed:@"Avatar.png"];
     
@@ -627,6 +653,20 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
+  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+  //电话号码
+  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+  ABContact *aContact = [ABContact contactWithRecord:person];
+  
+  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+  [singleCall setObject:aContact.contactName    forKey:kMain]; 
+  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+  [self.callHistory insertObject:singleCall atIndex:0];  
+  
+  [CallHistory saveCallRecord:self.callHistory 
+                   toFilePath:[CallHistory filePathName]];
 	return YES;
 }
 

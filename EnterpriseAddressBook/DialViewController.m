@@ -15,6 +15,10 @@
 #import "EnterpriseNameDatabase.h"
 #import "EnterpriseSearchPinYin.h"
 #import "EnterpriseContact.h"
+#import "CallHistory.h"
+#import "EnterpriseSearchPinYin.h"
+
+
 @interface DialViewController ()
 - (void) toHidden;
 - (void) toAppear;
@@ -78,7 +82,7 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-
+  
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts];  
@@ -88,9 +92,9 @@
     for (Company *aCompany in companyArray) {
       eContacts = [eContacts arrayByAddingObjectsFromArray:[[EnterpriseContacts contacts:aCompany.companyID] copy]];
     }
-    NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
+    //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
-    self.call_history = [self loadCallRecordFromFilePath:[self filePathName]];
+    self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
     dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
       [self.table reloadData];
@@ -100,13 +104,35 @@
   
   self.isHidden = NO;
   self.telephone_number = [[[NSString alloc] init] autorelease];
-  self.call_history = [[[NSMutableArray alloc] init] autorelease];
+  //self.call_history = [[[NSMutableArray alloc] init] autorelease];
   self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
   
   [[NSNotificationCenter defaultCenter] addObserver:self 
                                            selector:@selector(update) 
                                                name:@"update" 
                                              object:nil];  
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated]; 
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    self.contacts = [ABContactsHelper contacts];  
+    NSArray *eContacts = [[[NSArray alloc] init] autorelease];
+    NSMutableArray *companyArray = [EnterpriseNameDatabase queryEnterpriseName];
+    
+    for (Company *aCompany in companyArray) {
+      eContacts = [eContacts arrayByAddingObjectsFromArray:[[EnterpriseContacts contacts:aCompany.companyID] copy]];
+    }
+    //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
+    self.enterpriseContacts = eContacts;
+    self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    dispatch_async(dispatch_get_main_queue(), ^{ 
+      //NSLog(@"DFSDFAS %@", self.call_history);
+      [self.table reloadData];
+    });
+  });
+  dispatch_release(q);  
 }
 
 - (IBAction)dial:(UIButton *)sender {
@@ -144,14 +170,14 @@
       [self.single_call_history setObject:self.telephone_number forKey:kTelephoneNumber];
       
       // NSLog(@"rrrrr %@", self.single_call_history);
-      [self.single_call_history setObject:[self dialTime] forKey:kDialTime];
+      [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
       // NSLog(@"%@", [self dialTime]);
       
       //[self.call_history insertObject:callRecord atIndex:0];
       [self.call_history insertObject:self.single_call_history atIndex:0];  
       // NSLog(@"rrrrr %@", self.call_history);
-      [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-      
+      //[self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+      [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
       self.telephone_number = @"";
       [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
       [self.table reloadData];
@@ -160,9 +186,7 @@
   }
 }
 
-- (NSDate *)dialTime {
-  return  [NSDate date];
-}
+
 
 - (void) toHidden {
   CAKeyframeAnimation *positionAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"]; //动画类型为移动位置
@@ -195,8 +219,8 @@
   CGFloat x2 = 160.f;//self.dialView.frame.origin.x + self.dialView.bounds.size.width * .5f;
   CGFloat y2 = 550.f;//self.dialView.frame.origin.y + 500;   
   
-
- // NSLog(@"%f, %f, %f, %f", x1, y1, x2, y2);
+  
+  // NSLog(@"%f, %f, %f, %f", x1, y1, x2, y2);
   
   CGPathMoveToPoint(path, NULL, x2, y2); //移动到指定路径
   CGPathAddLineToPoint(path, NULL, x1, y1); //添加一条路径
@@ -210,13 +234,13 @@
 - (void)update {
   if (self.isHidden) {
     self.isHidden = NO;
-
+    
     [self toAppear];
     //[self.dialView setHidden:NO];
   } else {
     self.isHidden = YES;
     [self toHidden];
-
+    
   }
 }
 
@@ -224,7 +248,7 @@
   [self setDiaplayLable:nil];
   [self setDialView:nil];
   [self setNumber_display:nil];
-
+  
   [super viewDidUnload];
   // Release any retained subviews of the main view.
   // e.g. self.myOutlet = nil;
@@ -262,42 +286,10 @@
   return (self.isSearching) ? [self.filteredListContent count] : [self.call_history count]; 
 }
 
-- (NSMutableArray *)loadCallRecordFromFilePath:(NSString *)filePath {
-  NSMutableArray *record = nil;
-  if (filePath == nil || [filePath length] == 0 || 
-      [[NSFileManager defaultManager] fileExistsAtPath:filePath] == NO) {
-    record = [[[NSMutableArray alloc] init] autorelease];
-  } else {
-    NSData *data = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSKeyedUnarchiver *vdUnarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-    record = [vdUnarchiver decodeObjectForKey:kSaveKeyMarkerLines];
-    [vdUnarchiver finishDecoding];
-    [vdUnarchiver release];
-    [data release];
-  }
-  return record;
-}
 
-- (void)saveCallRecord:(NSMutableArray *)record toFilePath:(NSString *)filePath {
-  NSMutableData *data = [[NSMutableData alloc] init];
-  NSKeyedArchiver *vdArchiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-  [vdArchiver encodeObject:record forKey:kSaveKeyMarkerLines];
-  [vdArchiver finishEncoding];
-  [data writeToFile:filePath atomically:YES];
-  [vdArchiver release];
-  [data release];
-}
 
-- (NSString *)filePathName {
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);  
-  NSString *documentsDirectory = [paths objectAtIndex:0];  
-  if (!documentsDirectory) {  
-    NSLog(@"Documents directory not found!");  
-  }  
-  NSString *appFile = [documentsDirectory stringByAppendingPathComponent:@"CallRecord.plist"];  
-  
-  return appFile;
-}
+
+
 
 -(UITableViewCell *)tableView:(UITableView *)tableView 
         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -349,16 +341,27 @@
     NSDate *date = [call_record objectForKey:kDialTime];    
     //NSDate *date = callRecord.callTime;
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-    [dateFormatter setDateFormat:[self dateFormaterString:[current timeIntervalSince1970] - [date timeIntervalSince1970]]];
     
-    cell.dialTime = [dateFormatter stringFromDate:date];
+    NSString *formatString = [self dateFormaterString:[current timeIntervalSince1970] - [date timeIntervalSince1970]];
+    if (![formatString isEqualToString:@"昨天"]) {
+      [dateFormatter setDateFormat:formatString];
+      cell.dialTime = [dateFormatter stringFromDate:date];
+    } else {
+      cell.dialTime = @"昨天";
+    }
+
+    
   }
   return cell;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-  NSLog(@"scrollViewDidScroll");
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  if (!self.isHidden) {
+    self.isHidden = YES;
+    //[self.dialView setHidden:YES];
+    [self toHidden];
+  }
+  //NSLog(@"scrollViewDidScroll");
 }
 
 - (NSInteger)todayTimeInterval {
@@ -426,48 +429,50 @@
       [self toHidden];
     } else {
       id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
-          if ([aContact isKindOfClass:[NSDictionary class]]) {
-            
-      NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
-      contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
-      ABContact *abContact = [contact_dict objectForKey:kContact];
-      NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
-      //    g(@"contact.phoneArray   %@", [abContact.phoneArray objectAtIndex:0]);
-      
-      self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
-      if (abContact != nil) {
-        [self.single_call_history setObject:abContact.contactName forKey:kMain]; 
-        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+      if ([aContact isKindOfClass:[NSDictionary class]]) {
+        
+        NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
+        contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
+        ABContact *abContact = [contact_dict objectForKey:kContact];
+        NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
+        //    g(@"contact.phoneArray   %@", [abContact.phoneArray objectAtIndex:0]);
+        
+        self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
+        if (abContact != nil) {
+          [self.single_call_history setObject:abContact.contactName forKey:kMain]; 
+          [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+        } else {
+          [self.single_call_history setObject:self.telephone_number forKey:kMain];
+          [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+        }
+        
+        [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
+        [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
+        [self.call_history insertObject:self.single_call_history atIndex:0];  
+        
+        //[self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+        [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
+        [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
+        self.telephone_number = @"";
+        [self.table reloadData];
       } else {
-        [self.single_call_history setObject:self.telephone_number forKey:kMain];
-        [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+        EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eContact.phone_number]];
+        self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
+        [self.single_call_history setObject:eContact.name forKey:kMain]; 
+        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+        
+        [self.single_call_history setObject:eContact.phone_number forKey:kTelephoneNumber];
+        [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
+        [self.call_history insertObject:self.single_call_history atIndex:0];  
+        
+        //[self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+        [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
+        [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
+        self.telephone_number = @"";
+        [self.table reloadData];
       }
-      
-      [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
-      [self.single_call_history setObject:[self dialTime] forKey:kDialTime];
-      [self.call_history insertObject:self.single_call_history atIndex:0];  
-      
-      [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-      [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
-      self.telephone_number = @"";
-      [self.table reloadData];
-          } else {
-            EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eContact.phone_number]];
-            self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
-            [self.single_call_history setObject:eContact.name forKey:kMain]; 
-            [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
-            
-            [self.single_call_history setObject:eContact.phone_number forKey:kTelephoneNumber];
-            [self.single_call_history setObject:[self dialTime] forKey:kDialTime];
-            [self.call_history insertObject:self.single_call_history atIndex:0];  
-            
-            [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-            [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
-            self.telephone_number = @"";
-            [self.table reloadData];
-          }
     }    
   } else {
     if (self.isHidden) {
@@ -475,11 +480,16 @@
       NSString *callNumber = [single objectForKey:kTelephoneNumber];
       
       ABContact *abContact = [SearchPinYin absoluteMatch:callNumber 
-                                             addressBook:[self.contacts mutableCopy]];
-      
+                                             addressBook:self.contacts];
+      EnterpriseContact *eContact = [EnterpriseSearchPinYin absoluteMatch:callNumber 
+                                                              addressBook:self.enterpriseContacts];
+      NSLog(@"%@", eContact.phone_number);
       self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
       if (abContact != nil) {
         [self.single_call_history setObject:abContact.contactName forKey:kMain]; 
+        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+      } else if (eContact != nil){
+        [self.single_call_history setObject:eContact.name forKey:kMain]; 
         [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
       } else {
         [self.single_call_history setObject:callNumber forKey:kMain];
@@ -487,10 +497,11 @@
       }
       
       [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
-      [self.single_call_history setObject:[self dialTime] forKey:kDialTime];
+      [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
       [self.call_history insertObject:self.single_call_history atIndex:0];  
       
-      [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+      // [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
+      [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
       [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
       self.telephone_number = @"";
       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[single objectForKey:kTelephoneNumber ]]];

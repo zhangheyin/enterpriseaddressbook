@@ -7,7 +7,7 @@
 //
 
 #import "EnterpriseSearchPinYin.h"
-#import "EnterpriseContact.h"
+
 #import "EnterpriseContacts.h"
 @implementation EnterpriseSearchPinYin
 //判断是否为整形：
@@ -215,5 +215,24 @@
   }
   //NSLog(@"%@", searched_array); 
   return searched_enterprise_contacts;
+}
+
+
++ (EnterpriseContact *) absoluteMatch:(NSString *)key_word 
+                  addressBook:(NSArray *)addressBook {
+  for(EnterpriseContact *people_info in addressBook) {
+    //ABContact *contact = [people_info objectForKey:kContact];
+    if (people_info.phone_number != nil) {
+      NSString *phonenumbers = people_info.phone_number;
+      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"(" withString:@""];
+      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@")" withString:@""];
+      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"-" withString:@""];
+      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@" " withString:@""];
+      if ([phonenumbers isEqualToString:key_word]) {
+        return people_info;
+      }
+    }
+  }
+  return nil;
 }
 @end

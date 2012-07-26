@@ -10,6 +10,9 @@
 #import "CompanyOrganization.h"
 #import "EnterpriseContacts.h"
 #import "ABContact.h"
+#import "CallHistory.h"
+#import "Company.h"
+#import "EnterpriseNameDatabase.h"
 @interface CompanyOrganizationViewController ()
 
 @end
@@ -18,6 +21,9 @@
 @synthesize allCompanyOrganization = _allCompanyOrganization;
 @synthesize departID = _departID;
 @synthesize companyID = _companyID;
+@synthesize companyName = _companyName;
+@synthesize callHistory = _callHistory;
+
 - (id)initWithStyle:(UITableViewStyle)style {
   self = [super initWithStyle:style];
   if (self) {
@@ -28,9 +34,10 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  [self initTitleView:self.companyName];
   self.allCompanyOrganization = [CompanyOrganization queryAllCompanyOrganization:self.companyID 
                                                                         departID:self.departID];
-  
+  self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
  // NSLog(@"%@", self.allCompanyOrganization);
   // Uncomment the following line to preserve selection between presentations.
   self.clearsSelectionOnViewWillAppear = NO;
@@ -177,8 +184,83 @@
 - (BOOL)personViewController:(ABPersonViewController *)personViewController 
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
-                  identifier:(ABMultiValueIdentifier)identifierForValue{
+                  identifier:(ABMultiValueIdentifier)identifierForValue {
+  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+  //电话号码
+  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+  ABContact *aContact = [ABContact contactWithRecord:person];
+  
+  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+  [singleCall setObject:aContact.contactName    forKey:kMain]; 
+  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+  [self.callHistory insertObject:singleCall atIndex:0];  
+  
+  [CallHistory saveCallRecord:self.callHistory 
+                   toFilePath:[CallHistory filePathName]];
+
 	return YES;
+}
+
+- (void) companyList {
+  NSMutableArray *companyList = [EnterpriseNameDatabase queryEnterpriseName];
+  UIActionSheet *companyActionSheet = [[UIActionSheet alloc] initWithTitle:@"公司列表"  
+                                                        delegate:self  
+                                               cancelButtonTitle:nil  
+                                          destructiveButtonTitle:nil  
+                                               otherButtonTitles:nil];  
+  // 逐个添加按钮（比如可以是数组循环）  
+  for (Company *aCompany in companyList) {
+    [companyActionSheet addButtonWithTitle:aCompany.companyName];
+  }
+  // 同时添加一个取消按钮  
+  [companyActionSheet addButtonWithTitle:@"取消"];  
+  // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
+  companyActionSheet.cancelButtonIndex = companyActionSheet.numberOfButtons-1;
+  companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  [companyActionSheet showInView:[UIApplication sharedApplication].keyWindow];
+  [companyActionSheet release];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+  if  (buttonIndex < [[EnterpriseNameDatabase queryEnterpriseName] count]) {
+    Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:buttonIndex];
+    [self initTitleView:defultCompany.companyName];
+    self.companyName = defultCompany.companyName;
+    self.companyID = defultCompany.companyID;
+    self.allCompanyOrganization = [CompanyOrganization queryAllCompanyOrganization:self.companyID 
+                                                                          departID:self.departID];
+    [self.tableView reloadData];
+  }
+}
+
+- (void) initTitleView:(NSString *)companyName {
+  UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 240, 20)];//allocate titleView
+  UIButton *btnNormal = [UIButton buttonWithType:UIButtonTypeCustom];
+  [btnNormal setFrame:CGRectMake(0, 0, 240, 20)];
+  [btnNormal addTarget:self action:@selector(companyList) forControlEvents:UIControlEventTouchUpInside];
+  //[btnNormal setBackgroundImage:[UIImage imageNamed:@"icon_question_info.png"] forState:UIControlStateNormal ];
+  
+  [btnNormal setTitle:companyName forState:UIControlStateNormal];
+  //[btnNormal setFont:[UIFont systemFontOfSize:8]];
+  // btnNormal.titleLabel.font = [UIFont systemFontOfSize:12];
+  
+  btnNormal.titleLabel.textAlignment = UITextAlignmentCenter;
+  btnNormal.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+  btnNormal.titleLabel.numberOfLines = 0;     // 不可少Label属性之一
+  btnNormal.titleLabel.lineBreakMode = UILineBreakModeCharacterWrap;    // 不可少Label属性之二
+  [titleView addSubview:btnNormal];
+  
+  //  UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 100, 20)];//allocate titleText
+  //  titleText.textColor = [UIColor whiteColor];
+  //  titleText.backgroundColor = [UIColor clearColor];
+  //  [titleText setText:companyName];
+  //  //[titleView addSubview:titleText];
+  //  [titleText release];//release titleText 
+  self.navigationItem.titleView = titleView;
+  [titleView release];//release titleView
+  
 }
 
 - (void)dealloc {

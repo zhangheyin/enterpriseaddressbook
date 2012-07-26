@@ -22,4 +22,9 @@ static NSString *kNamePinyinNum = @"name_pinyin_num";
 
 static NSString *kNameNumLocation = @"name_num_location";
 static NSString *kSaveKeyMarkerLines = @"SaveKeyMarkerLines";
+
+static NSString *kTelephoneNumber = @"telephonenumber";
+static NSString *kHaveContacts = @"havecontacts";
+static NSString *kMain = @"main";
+static NSString *kDialTime = @"dialtime";
 #endif

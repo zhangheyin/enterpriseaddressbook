@@ -23,13 +23,15 @@
 @property (retain, nonatomic) NSMutableArray *allDepartments;
 @property (retain, nonatomic) UIActionSheet *companyActionSheet;
 @property (retain, nonatomic) UIActionSheet *sortDisplayActionSheet;
+@property (copy, nonatomic) NSString *companyName;
 
+@property (retain, nonatomic) NSMutableArray* callHistory;
 - (NSArray *)fetchAllPinyinKey:(NSArray*)contacts;
 - (NSMutableArray *) fetchContactOnASetion:(NSArray *)contacts
                      numberOfRowsInSection:(NSUInteger)section 
                                 whichIndex:(NSInteger)sortIndex;
 - (void) initTitleView:(NSString *)companyName;
--(void)copyFileDatabase;
+- (void) copyFileDatabase;
 - (void) sortKind;
 - (void) intoCompanyOrganization;
 @end

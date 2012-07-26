@@ -18,6 +18,8 @@
 @property (nonatomic, retain) NSArray *filteredListContent;
 @property (nonatomic, retain) NSArray *all_keys;
 
+
+@property (retain, nonatomic) NSMutableArray* callHistory;
 - (NSMutableArray *) fetchContactOnASetion:(NSArray *)contacts
                      numberOfRowsInSection:(NSUInteger)section;
 - (NSArray *)fetchAllKey:(NSArray*)contacts;

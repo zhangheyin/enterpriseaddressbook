@@ -11,7 +11,7 @@
 #import <AddressBookUI/AddressBookUI.h> 
 #import "POAPinyin.h"
 #import "ABContactsHelper.h"
-
+#import "EnterpriseContact.h"
 @interface EnterpriseSearchPinYin : NSObject
 + (NSDictionary*)number_pad;
 + (NSArray *)fetchKeyWordArray:(NSString *)key_word_string;
@@ -29,4 +29,7 @@
 //                        addressBook:(NSMutableArray *)addressBook;
 
 + (NSMutableArray *)fetchKeyAppearPinyinArray:(NSString *)key_word;
+
++ (EnterpriseContact *) absoluteMatch:(NSString *)key_word 
+                          addressBook:(NSArray *)addressBook;
 @end
