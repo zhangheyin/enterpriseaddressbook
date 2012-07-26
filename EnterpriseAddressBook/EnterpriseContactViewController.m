@@ -36,7 +36,7 @@
   [super viewDidLoad];
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
-
+    
     self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
     //NSLog(@"%@", self.enterprise_contacts);
     self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
@@ -48,7 +48,7 @@
     [self initTitleView:defultCompany.companyName];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-
+      
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
       [self.tableView reloadData];
     });
@@ -58,20 +58,20 @@
                                                                         blue:0.f/255.0 
                                                                        alpha:1.0]];
   UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc]initWithTitle:@"排序方式" 
-                                                                 style:UIBarButtonItemStyleBordered 
-                                                                target:self 
-                                                                action:@selector(sortKind)];
+                                                                  style:UIBarButtonItemStyleBordered 
+                                                                 target:self 
+                                                                 action:@selector(sortKind)];
   
   UIBarButtonItem *leftButton   = [[UIBarButtonItem alloc]initWithTitle:@"组织结构" 
-                                                                style:UIBarButtonItemStyleBordered 
-                                                               target:self 
-                                   action:@selector(intoCompanyOrganization)];
+                                                                  style:UIBarButtonItemStyleBordered 
+                                                                 target:self 
+                                                                 action:@selector(intoCompanyOrganization)];
   self.navigationItem.rightBarButtonItem = rightButton;
   self.navigationItem.leftBarButtonItem = leftButton;
-
+  
   self.sortDisplayActionSheet = [[UIActionSheet alloc] init];
   self.companyActionSheet = [[UIActionSheet alloc] init];
-
+  
   
   //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
   [rightButton release];  
@@ -79,7 +79,7 @@
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
   
   
-
+  
   
   dispatch_release(q);  
 }
@@ -106,7 +106,7 @@
   });
   
   dispatch_release(q);  
-
+  
 }
 
 - (void) initTitleView:(NSString *)companyName {
@@ -115,10 +115,10 @@
   [btnNormal setFrame:CGRectMake(0, 0, 150, 20)];
   [btnNormal addTarget:self action:@selector(companyList) forControlEvents:UIControlEventTouchUpInside];
   //[btnNormal setBackgroundImage:[UIImage imageNamed:@"icon_question_info.png"] forState:UIControlStateNormal ];
-
+  
   [btnNormal setTitle:companyName forState:UIControlStateNormal];
   //[btnNormal setFont:[UIFont systemFontOfSize:8]];
- // btnNormal.titleLabel.font = [UIFont systemFontOfSize:12];
+  // btnNormal.titleLabel.font = [UIFont systemFontOfSize:12];
   
   btnNormal.titleLabel.textAlignment = UITextAlignmentCenter;
   btnNormal.titleLabel.font = [UIFont boldSystemFontOfSize:17.0f];
@@ -126,12 +126,12 @@
   btnNormal.titleLabel.lineBreakMode = UILineBreakModeCharacterWrap;    // 不可少Label属性之二
   [titleView addSubview:btnNormal];
   
-//  UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 100, 20)];//allocate titleText
-//  titleText.textColor = [UIColor whiteColor];
-//  titleText.backgroundColor = [UIColor clearColor];
-//  [titleText setText:companyName];
-//  //[titleView addSubview:titleText];
-//  [titleText release];//release titleText 
+  //  UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 100, 20)];//allocate titleText
+  //  titleText.textColor = [UIColor whiteColor];
+  //  titleText.backgroundColor = [UIColor clearColor];
+  //  [titleText setText:companyName];
+  //  //[titleView addSubview:titleText];
+  //  [titleText release];//release titleText 
   self.navigationItem.titleView = titleView;
   [titleView release];//release titleView
   
@@ -165,10 +165,10 @@
   //过渡方向  
   animation.subtype = kCATransitionFromRight;  
   //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
- // animation.fillMode = kCAFillModeBackwards;  
+  // animation.fillMode = kCAFillModeBackwards;  
   //动画开始(在整体动画的百分比).  
   //animation.startProgress = 0.3;  
- // [imageView.layer addAnimation:animation forKey:nil];  
+  // [imageView.layer addAnimation:animation forKey:nil];  
   [self.navigationController.view.layer addAnimation:animation 
                                               forKey:nil];
   [self.navigationController pushViewController:covc animated:NO];
@@ -176,24 +176,24 @@
 
 - (void) sortKind {
   self.sortDisplayActionSheet = [[UIActionSheet alloc] initWithTitle:@"排序方式" 
-                                                          delegate:(id<UIActionSheetDelegate>)self   
-                                                 cancelButtonTitle:@"取消"
-                                            destructiveButtonTitle:nil//@"修改联系人" 
-                                                 otherButtonTitles:@"按姓名排序", @"按部门排序", nil];
+                                                            delegate:(id<UIActionSheetDelegate>)self   
+                                                   cancelButtonTitle:@"取消"
+                                              destructiveButtonTitle:nil//@"修改联系人" 
+                                                   otherButtonTitles:@"按姓名排序", @"按部门排序", nil];
   
-  self.sortDisplayActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  self.sortDisplayActionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
   [self.sortDisplayActionSheet showInView:[UIApplication sharedApplication].keyWindow];
- // [self.sortDisplayActionSheet release];
+  // [self.sortDisplayActionSheet release];
 }
 
 - (void) companyList {
   NSMutableArray *companyList = [EnterpriseNameDatabase queryEnterpriseName];
   self.companyActionSheet = [[UIActionSheet alloc] initWithTitle:@"公司列表"  
-                                                     delegate:self  
-                                            cancelButtonTitle:nil  
-                                       destructiveButtonTitle:nil  
-                                            otherButtonTitles:nil];  
+                                                        delegate:self  
+                                               cancelButtonTitle:nil  
+                                          destructiveButtonTitle:nil  
+                                               otherButtonTitles:nil];  
   // 逐个添加按钮（比如可以是数组循环）  
   for (Company *aCompany in companyList) {
     [self.companyActionSheet addButtonWithTitle:aCompany.companyName];
@@ -202,7 +202,7 @@
   [self.companyActionSheet addButtonWithTitle:@"取消"];  
   // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
   self.companyActionSheet.cancelButtonIndex = self.companyActionSheet.numberOfButtons-1;
-  self.companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  self.companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   [self.companyActionSheet showInView:[UIApplication sharedApplication].keyWindow];
   //[sheet release];
 }
@@ -275,7 +275,7 @@
         break;
     }
     
-
+    
   }
   return 0;
 }
@@ -301,7 +301,7 @@
     case 1:{
       NSMutableArray *contacts_in_this_section = [[[NSMutableArray alloc] init] autorelease];
       NSString *key = [[[self.allDepartments objectAtIndex:section] allKeys] objectAtIndex:0];
-    
+      
       for (EnterpriseContact *aContact in contacts) {
         //NSLog(@"%@", aContact.depart_id);
         if ([key isEqualToString:aContact.depart_id]) {
@@ -331,17 +331,17 @@
     cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0];  
     EnterpriseContact *aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-   // NSLog(@"%@", aContact);
+    // NSLog(@"%@", aContact);
     //ABContact *contact = //[contact_dict objectForKey:kContact];
     
     UIImageView *contact_image = (UIImageView *)[cell viewWithTag:1000];
     UILabel *name_lable = (UILabel *)[cell viewWithTag:1010];
-  //  UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
-  //  UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
+    //  UILabel *pinyin_lable = (UILabel *)[cell viewWithTag:1020];
+    //  UILabel *number_lable = (UILabel *)[cell viewWithTag:1030];
     
     name_lable.text = aContact.name;//[contact.contactName isEqualToString:@""] ? contact.emailaddresses : contact.contactName;
-   // pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
-   // number_lable.text = aContact.phone_number;//contact.phonenumbers;
+    // pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
+    // number_lable.text = aContact.phone_number;//contact.phonenumbers;
     contact_image.image = [UIImage imageNamed:@"Avatar.png"];
     return cell;
   } else {
@@ -367,8 +367,8 @@
     cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
     
     cell.name = aContact.name;
-//    cell.number = aContact.phone_number;
-   // cell.pinyin = aContact.name_pinyin;
+    //    cell.number = aContact.phone_number;
+    // cell.pinyin = aContact.name_pinyin;
     cell.image =  [UIImage imageNamed:@"Avatar.png"];
     
     return cell;
@@ -382,7 +382,7 @@ titleForHeaderInSection:(NSInteger)section {
     NSString *titleHeader = [[[NSString alloc] init] autorelease];
     switch (self.sortKindsIndex) {
       case 0: {
-       titleHeader = [self.all_keys objectAtIndex:section];
+        titleHeader = [self.all_keys objectAtIndex:section];
         if (titleHeader == UITableViewIndexSearch)
           return nil;
         return titleHeader;
@@ -410,7 +410,7 @@ titleForHeaderInSection:(NSInteger)section {
         break;
       case 1: {
         NSMutableArray *allDepartmentsName = [[[NSMutableArray alloc] init] autorelease];
-
+        
         for (NSDictionary *singleDepartment in allDepartmentsName) {
           [allDepartmentsName addObject: [[singleDepartment allValues] objectAtIndex:0]];
         }
@@ -500,9 +500,9 @@ sectionForSectionIndexTitle:(NSString *)title
   EnterpriseContact *aContact;
   if (tableView == self.searchDisplayController.searchResultsTableView)	{
     aContact = [self.filtered_enterprise_contacts objectAtIndex:indexPath.row];
-   // NSLog(@"%@", aContact); 
+    // NSLog(@"%@", aContact); 
   } else {
- 
+    
     aContact = [[self fetchContactOnASetion:self.enterprise_contacts 
                       numberOfRowsInSection:section 
                                  whichIndex:self.sortKindsIndex] objectAtIndex:row];
@@ -514,7 +514,7 @@ sectionForSectionIndexTitle:(NSString *)title
   // Allow users to edit the person’s information
   picker.allowsEditing = NO;
   picker.title = aContact.name;
-
+  
   
   CATransition *animation = [CATransition animation];  
   //动画时间  
@@ -647,20 +647,22 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue {
-  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
-  //电话号码
-  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
-  ABContact *aContact = [ABContact contactWithRecord:person];
-  
-  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
-  [singleCall setObject:aContact.contactName    forKey:kMain]; 
-  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
-  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
-  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
-  [self.callHistory insertObject:singleCall atIndex:0];  
-  
-  [CallHistory saveCallRecord:self.callHistory 
-                   toFilePath:[CallHistory filePathName]];
+  if (property == kABPersonPhoneProperty) {
+    ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    //电话号码
+    NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+    ABContact *aContact = [ABContact contactWithRecord:person];
+    
+    NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+    [singleCall setObject:aContact.contactName    forKey:kMain]; 
+    [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+    [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+    [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+    [self.callHistory insertObject:singleCall atIndex:0];  
+    
+    [CallHistory saveCallRecord:self.callHistory 
+                     toFilePath:[CallHistory filePathName]];
+  }
 	return YES;
 }
 

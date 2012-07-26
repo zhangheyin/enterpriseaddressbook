@@ -150,7 +150,7 @@
                                          destructiveButtonTitle:nil//@"修改联系人" 
                                               otherButtonTitles:@"确定", nil];
   
-  self.clearRecordSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  self.clearRecordSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
   [self.clearRecordSheet showInView:[UIApplication sharedApplication].keyWindow];
   
@@ -489,7 +489,7 @@
         [self.dialSheet addButtonWithTitle:@"取消"];  
         // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
         self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
-        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
         [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
         
       } else {
@@ -506,7 +506,7 @@
         [self.dialSheet addButtonWithTitle:@"取消"];  
         // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
         self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
-        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
         [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
       }
     }    
@@ -539,7 +539,7 @@
       [self.dialSheet addButtonWithTitle:@"取消"];  
       // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
       self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
-      self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+      self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
       [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
       
       [self.table reloadData];

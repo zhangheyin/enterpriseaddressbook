@@ -38,7 +38,7 @@
   self.allCompanyOrganization = [CompanyOrganization queryAllCompanyOrganization:self.companyID 
                                                                         departID:self.departID];
   self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
- // NSLog(@"%@", self.allCompanyOrganization);
+  // NSLog(@"%@", self.allCompanyOrganization);
   // Uncomment the following line to preserve selection between presentations.
   self.clearsSelectionOnViewWillAppear = NO;
   
@@ -185,31 +185,32 @@
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue {
-  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
-  //电话号码
-  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
-  ABContact *aContact = [ABContact contactWithRecord:person];
-  
-  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
-  [singleCall setObject:aContact.contactName    forKey:kMain]; 
-  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
-  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
-  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
-  [self.callHistory insertObject:singleCall atIndex:0];  
-  
-  [CallHistory saveCallRecord:self.callHistory 
-                   toFilePath:[CallHistory filePathName]];
-
+  if (property == kABPersonPhoneProperty) {
+    ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    //电话号码
+    NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+    ABContact *aContact = [ABContact contactWithRecord:person];
+    
+    NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+    [singleCall setObject:aContact.contactName    forKey:kMain]; 
+    [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+    [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+    [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+    [self.callHistory insertObject:singleCall atIndex:0];  
+    
+    [CallHistory saveCallRecord:self.callHistory 
+                     toFilePath:[CallHistory filePathName]];
+  }
 	return YES;
 }
 
 - (void) companyList {
   NSMutableArray *companyList = [EnterpriseNameDatabase queryEnterpriseName];
   UIActionSheet *companyActionSheet = [[UIActionSheet alloc] initWithTitle:@"公司列表"  
-                                                        delegate:self  
-                                               cancelButtonTitle:nil  
-                                          destructiveButtonTitle:nil  
-                                               otherButtonTitles:nil];  
+                                                                  delegate:self  
+                                                         cancelButtonTitle:nil  
+                                                    destructiveButtonTitle:nil  
+                                                         otherButtonTitles:nil];  
   // 逐个添加按钮（比如可以是数组循环）  
   for (Company *aCompany in companyList) {
     [companyActionSheet addButtonWithTitle:aCompany.companyName];
@@ -218,7 +219,7 @@ shouldPerformDefaultActionForPerson:(ABRecordRef)person
   [companyActionSheet addButtonWithTitle:@"取消"];  
   // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
   companyActionSheet.cancelButtonIndex = companyActionSheet.numberOfButtons-1;
-  companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  companyActionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   [companyActionSheet showInView:[UIApplication sharedApplication].keyWindow];
   [companyActionSheet release];
 }

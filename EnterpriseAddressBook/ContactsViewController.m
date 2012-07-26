@@ -52,7 +52,7 @@
                                             destructiveButtonTitle:nil//@"修改联系人" 
                                                  otherButtonTitles:@"新建联系人", @"删除联系人", nil];
   
-  popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
   //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
   [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
   [popupQuery release];
@@ -478,21 +478,23 @@ sectionForSectionIndexTitle:(NSString *)title
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
-  ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
-  //电话号码
-  NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
-  ABContact *aContact = [ABContact contactWithRecord:person];
-  
-  NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
-  [singleCall setObject:aContact.contactName    forKey:kMain]; 
-  [singleCall setObject:@"YES"                  forKey:kHaveContacts];
-  [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
-  [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
-  [self.callHistory insertObject:singleCall atIndex:0];  
-
-  [CallHistory saveCallRecord:self.callHistory 
-                   toFilePath:[CallHistory filePathName]];
-  
+  if (property == kABPersonPhoneProperty) {
+    ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+    //电话号码
+    NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];
+    ABContact *aContact = [ABContact contactWithRecord:person];
+    
+    NSMutableDictionary *singleCall = [[[NSMutableDictionary alloc] init] autorelease];
+    [singleCall setObject:aContact.contactName    forKey:kMain]; 
+    [singleCall setObject:@"YES"                  forKey:kHaveContacts];
+    [singleCall setObject:phoneNumber             forKey:kTelephoneNumber];
+    [singleCall setObject:[CallHistory dialTime]  forKey:kDialTime];
+    [self.callHistory insertObject:singleCall atIndex:0];  
+    
+    [CallHistory saveCallRecord:self.callHistory 
+                     toFilePath:[CallHistory filePathName]];
+    
+  }
   return YES;
 }
 
