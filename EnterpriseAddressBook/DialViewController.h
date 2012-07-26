@@ -11,7 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 
-@interface DialViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+@interface DialViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UIActionSheetDelegate>
 @property (nonatomic, assign) CALayer *layer;
 @property (retain, nonatomic) IBOutlet UILabel *diaplayLable;
 @property (copy, nonatomic) NSString *telephone_number;
@@ -25,13 +25,15 @@
 @property (retain, nonatomic) NSMutableArray* call_history;
 @property BOOL isSearching;
 @property (retain, nonatomic) NSArray *enterpriseContacts;
-
+@property (retain, nonatomic) UIActionSheet *clearRecordSheet;
+@property (retain, nonatomic) UIActionSheet *dialSheet;
 
 
 - (void)fetchContacts;
 - (IBAction)dialNumber:(UIButton *)sender;
 - (void)filterContentForSearchText:(NSString*)searchText;
 - (IBAction)back:(UIButton *)sender;
-
-
+- (void) clearRecord;
+- (void) saveCallHistory:(NSString *)contactName
+              callNumber:(NSString *)callNumber;
 @end

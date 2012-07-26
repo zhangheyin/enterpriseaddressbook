@@ -267,6 +267,9 @@ shouldPerformDefaultActionForPerson:(ABRecordRef)person
   [self.allCompanyOrganization release];
   [self.companyID release];
   [self.departID release];
+  [self.companyName release];
+  [self.callHistory release];
+  
   [super dealloc];
 }
 @end

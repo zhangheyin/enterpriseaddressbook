@@ -644,6 +644,8 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
   [_allDepartments release];
   [self.sortDisplayActionSheet release];
   [self.companyActionSheet release];
+  [self.companyName release];
+  [self.callHistory release];
   [super dealloc];
 }
 
@@ -652,7 +654,7 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
 - (BOOL)personViewController:(ABPersonViewController *)personViewController 
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
-                  identifier:(ABMultiValueIdentifier)identifierForValue{
+                  identifier:(ABMultiValueIdentifier)identifierForValue {
   ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
   //电话号码
   NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];

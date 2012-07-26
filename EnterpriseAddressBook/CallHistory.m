@@ -20,7 +20,17 @@
   return appFile;
 }
 
-
++ (void)deleteFileDatabade {
+  NSArray *paths = NSSearchPathForDirectoriesInDomains( NSDocumentDirectory,NSUserDomainMask, YES);
+  NSString *documentsDirectory = [paths objectAtIndex:0];  
+  if (!documentsDirectory) {  
+    NSLog(@"Documents directory not found!");  
+    return;
+  }  
+  NSString *documentLibraryFolderPath = [documentsDirectory stringByAppendingPathComponent:@"CallRecord.plist"];
+  
+  [[NSFileManager defaultManager] removeItemAtPath:documentLibraryFolderPath error:nil];
+}
 + (NSMutableArray *)loadCallRecordFromFilePath:(NSString *)filePath {
   NSMutableArray *record = nil;
   if (filePath == nil || [filePath length] == 0 || 

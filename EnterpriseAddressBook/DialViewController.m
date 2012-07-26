@@ -40,6 +40,8 @@
 @synthesize layer = _layer;
 @synthesize enterpriseContacts = _enterpriseContacts;
 
+@synthesize clearRecordSheet = _clearRecordSheet;
+@synthesize dialSheet = _dialSheet;
 - (void) setTelephone_number:(NSString *)telephone_number {
   if (![telephone_number isEqualToString:@""]) {
     [self setIsSearching:YES];
@@ -82,7 +84,12 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  UIBarButtonItem *rightButton  = [[UIBarButtonItem alloc] initWithTitle:@"清空记录" style:UIBarButtonItemStyleBordered target:self action:@selector(clearRecord)];
+  self.navigationItem.rightBarButtonItem = rightButton;
+  [rightButton release]; 
   
+  self.clearRecordSheet = [[UIActionSheet alloc] init];
+  self.dialSheet = [[UIActionSheet alloc] init];
   dispatch_queue_t q = dispatch_queue_create("queue", 0);
   dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts];  
@@ -94,9 +101,10 @@
     }
     //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
-    self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    
     dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
+      self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.table reloadData];
     });
   });
@@ -126,18 +134,52 @@
     }
     //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
-    self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    
     dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
+      self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.table reloadData];
     });
   });
   dispatch_release(q);  
 }
+- (void) clearRecord {
+ self.clearRecordSheet =  [[UIActionSheet alloc] initWithTitle:@"清空拨号记录" 
+                                                          delegate:(id<UIActionSheetDelegate>)self   
+                                                 cancelButtonTitle:@"取消"
+                                            destructiveButtonTitle:nil//@"修改联系人" 
+                                                 otherButtonTitles:@"确定", nil];
+  
+  self.clearRecordSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+  //[popupQuery showFromTabBar:(UITabBar *)self.tabBarController.view];
+  [self.clearRecordSheet showInView:[UIApplication sharedApplication].keyWindow];
+
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+  if (actionSheet == self.clearRecordSheet) {
+    switch (buttonIndex) {
+      case 0:
+        [CallHistory deleteFileDatabade];
+        self.call_history = nil;
+        [self.table reloadData];
+        break;
+      case 1:
+        break;
+      default:
+        break;
+    }
+  } else {
+    NSString *callNumber = [actionSheet buttonTitleAtIndex:buttonIndex];
+    if (![callNumber isEqualToString:@"取消"]) {
+      [self saveCallHistory:actionSheet.title callNumber:callNumber];
+    }
+  }
+}
+
 
 - (IBAction)dial:(UIButton *)sender {
   if (![self.telephone_number isEqualToString:@""]) {
-    
     NSString *phoneAddress = [NSString stringWithFormat:@"tel://%@", self.telephone_number];
     /*BOOL dialSucessful = */
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneAddress]];
@@ -286,11 +328,6 @@
   return (self.isSearching) ? [self.filteredListContent count] : [self.call_history count]; 
 }
 
-
-
-
-
-
 -(UITableViewCell *)tableView:(UITableView *)tableView 
         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   
@@ -338,19 +375,21 @@
     cell.image = [UIImage imageNamed:@"dial_list_call.png"];
     
     NSDate *current = [NSDate date];
+    //NSLog(@"%@", call_record);
     NSDate *date = [call_record objectForKey:kDialTime];    
     //NSDate *date = callRecord.callTime;
     NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
     
-    NSString *formatString = [self dateFormaterString:[current timeIntervalSince1970] - [date timeIntervalSince1970]];
+    //NSLog(@"[current timeIntervalSince1970]   %@", current);
+   // NSLog(@"[date timeIntervalSince1970]      %@", date);
+    NSString *formatString = [self dateFormaterString:(NSInteger)[current timeIntervalSince1970] - (NSInteger)[date timeIntervalSince1970]];
     if (![formatString isEqualToString:@"昨天"]) {
+      NSLog(@"%@", formatString);
       [dateFormatter setDateFormat:formatString];
       cell.dialTime = [dateFormatter stringFromDate:date];
     } else {
       cell.dialTime = @"昨天";
     }
-
-    
   }
   return cell;
 }
@@ -428,87 +467,109 @@
       //[self.dialView setHidden:YES];
       [self toHidden];
     } else {
+
+
       id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
       if ([aContact isKindOfClass:[NSDictionary class]]) {
         
         NSDictionary *contact_dict = [[[NSDictionary alloc] init] autorelease];
         contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
         ABContact *abContact = [contact_dict objectForKey:kContact];
-        NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
-        //    g(@"contact.phoneArray   %@", [abContact.phoneArray objectAtIndex:0]);
-        
-        self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
-        if (abContact != nil) {
-          [self.single_call_history setObject:abContact.contactName forKey:kMain]; 
-          [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
-        } else {
-          [self.single_call_history setObject:self.telephone_number forKey:kMain];
-          [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+        //NSString *callNumber =[abContact.phoneArray objectAtIndex:0];
+                
+        self.dialSheet = [[UIActionSheet alloc] initWithTitle:abContact.contactName  
+                                                     delegate:self  
+                                            cancelButtonTitle:nil  
+                                       destructiveButtonTitle:nil  
+                                            otherButtonTitles:nil];  
+        // 逐个添加按钮（比如可以是数组循环）  
+        for (NSString *aPhoneNumber in abContact.phoneArray) {
+          [self.dialSheet addButtonWithTitle:aPhoneNumber];
         }
+        // 同时添加一个取消按钮  
+        [self.dialSheet addButtonWithTitle:@"取消"];  
+        // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
+        self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
+        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
         
-        [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
-        [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
-        [self.call_history insertObject:self.single_call_history atIndex:0];  
-        
-        //[self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-        [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
-        [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
-        self.telephone_number = @"";
-        [self.table reloadData];
+
       } else {
         EnterpriseContact *eContact = [self.filteredListContent objectAtIndex:indexPath.row];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:eContact.phone_number]];
-        self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
-        [self.single_call_history setObject:eContact.name forKey:kMain]; 
-        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+        self.dialSheet = [[UIActionSheet alloc] initWithTitle:eContact.name 
+                                                     delegate:self  
+                                            cancelButtonTitle:nil  
+                                       destructiveButtonTitle:nil  
+                                            otherButtonTitles:nil];  
+        // 逐个添加按钮（比如可以是数组循环）  
+          [self.dialSheet addButtonWithTitle:eContact.phone_number];
         
-        [self.single_call_history setObject:eContact.phone_number forKey:kTelephoneNumber];
-        [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
-        [self.call_history insertObject:self.single_call_history atIndex:0];  
-        
-        //[self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-        [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
-        [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
-        self.telephone_number = @"";
-        [self.table reloadData];
+        // 同时添加一个取消按钮  
+        [self.dialSheet addButtonWithTitle:@"取消"];  
+        // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
+        self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
+        self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
       }
     }    
   } else {
     if (self.isHidden) {
       NSDictionary *single = [self.call_history objectAtIndex:[indexPath row]];
       NSString *callNumber = [single objectForKey:kTelephoneNumber];
-      
+      NSString *callName = [[[NSString alloc] init] autorelease];
       ABContact *abContact = [SearchPinYin absoluteMatch:callNumber 
                                              addressBook:self.contacts];
       EnterpriseContact *eContact = [EnterpriseSearchPinYin absoluteMatch:callNumber 
                                                               addressBook:self.enterpriseContacts];
-      NSLog(@"%@", eContact.phone_number);
-      self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
+      //NSLog(@"%@", eContact.phone_number);
+
+      // 逐个添加按钮（比如可以是数组循环）  
       if (abContact != nil) {
-        [self.single_call_history setObject:abContact.contactName forKey:kMain]; 
-        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+        callName = abContact.contactName; 
       } else if (eContact != nil){
-        [self.single_call_history setObject:eContact.name forKey:kMain]; 
-        [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+        callName = eContact.name;
       } else {
-        [self.single_call_history setObject:callNumber forKey:kMain];
-        [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+        callName = callNumber;
       }
-      
-      [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
-      [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
-      [self.call_history insertObject:self.single_call_history atIndex:0];  
-      
-      // [self saveCallRecord:self.call_history toFilePath:[self filePathName]];
-      [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
-      [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
-      self.telephone_number = @"";
-      [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[single objectForKey:kTelephoneNumber ]]];
+      self.dialSheet = [[UIActionSheet alloc] initWithTitle:callName
+                                                   delegate:self  
+                                          cancelButtonTitle:nil  
+                                     destructiveButtonTitle:nil  
+                                          otherButtonTitles:nil];  
+      [self.dialSheet addButtonWithTitle:callNumber];
+      // 同时添加一个取消按钮  
+      [self.dialSheet addButtonWithTitle:@"取消"];  
+      // 将取消按钮的index设置成我们刚添加的那个按钮，这样在delegate中就可以知道是那个按钮  
+      self.dialSheet.cancelButtonIndex = self.dialSheet.numberOfButtons-1;
+      self.dialSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+      [self.dialSheet showInView:[UIApplication sharedApplication].keyWindow];
       
       [self.table reloadData];
     }
   }
+}
+
+- (void) saveCallHistory:(NSString *)contactName
+              callNumber:(NSString *)callNumber {
+  self.single_call_history = [[[NSMutableDictionary alloc] init] autorelease];
+  [self.single_call_history setObject:contactName forKey:kMain]; 
+  
+  if ([contactName isEqualToString:callNumber]) {
+    [self.single_call_history setObject:@"YES" forKey:kHaveContacts];
+  } else {
+    [self.single_call_history setObject:@"NO" forKey:kHaveContacts];
+  }
+  
+  
+  [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
+  [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
+  [self.call_history insertObject:self.single_call_history atIndex:0];  
+  
+  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
+  [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
+  [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
+  self.telephone_number = @"";
+  [self.table reloadData];
 }
 
 - (void)fetchContacts {
@@ -528,49 +589,32 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText {
   /*执行姓名首字母的*/
-  //[self fetchContacts];
-  //NSLog(@"filterContentForSearchText start");
-  // NSArray *result_of_key_pinyin = [SearchPinYin executePinyinKeySearch:searchText 
-  //                                                               addressBook:[self.contacts mutableCopy]]; 
   NSArray *result_of_key_pinyin = [SearchPinYin executePinyinKeySearch2:searchText 
                                                             addressBook:self.contacts];    
   /*执行号码的检索*/
-  //[self fetchContacts];
   NSArray *result_of_number_search = [SearchPinYin executeNumberSearch:searchText 
                                                            addressBook:self.contacts];
   /*执行全拼的检索*/
-  //[self fetchContacts];
   NSArray *result_of_detail_pinyin = [SearchPinYin executeDetailPinyinSearch:searchText 
                                                                  addressBook:self.contacts];
   
-  //NSLog(@"~~~~~~2~~~~~~~");        
-  NSArray *localContactresult = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] arrayByAddingObjectsFromArray:result_of_detail_pinyin];
-  //NSLog(@"filterContentForSearchText finish");
-  //self.filteredListContent = [final_result copy];
-  
-  
-  
+  NSArray *localContactresult = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] 
+                                 arrayByAddingObjectsFromArray:result_of_detail_pinyin];
+  /*----------------------------------------------------------------------------------*/ 
   NSArray *resultOfKeyPinyin = [EnterpriseSearchPinYin executePinyinKeySearch2:searchText 
                                                                    addressBook:self.enterpriseContacts];  
   //执行号码的检索
-  //[self fetchContacts];
   NSArray *resultOfNumberSearch = [EnterpriseSearchPinYin executeNumberSearch:searchText 
                                                                   addressBook:self.enterpriseContacts];
   //执行全拼的检索
-  //[self fetchContacts];
   NSArray *resultOfDetailPinyin = [EnterpriseSearchPinYin executeDetailPinyinSearch:searchText 
                                                                         addressBook:self.enterpriseContacts];
-  //NSLog(@"~~~~~~2~~~~~~~");    
+  
   NSArray *enterpriseContatsResult = [[resultOfKeyPinyin arrayByAddingObjectsFromArray:resultOfNumberSearch] arrayByAddingObjectsFromArray:resultOfDetailPinyin];
   //NSLog(@"%@", final_result);    
   NSSet *set = [NSSet setWithArray:enterpriseContatsResult];
-  
-  //[set allObjects];
   self.filteredListContent =  [localContactresult arrayByAddingObjectsFromArray:[set allObjects]];
-  
-  NSLog(@"localContactresult %i enterpriseContatsResult %i filteredListContent %i", [localContactresult count],[[set allObjects] count], [self.filteredListContent count]);
-  
-  
+  // NSLog(@"localContactresult %i enterpriseContatsResult %i filteredListContent %i", [localContactresult count],[[set allObjects] count], [self.filteredListContent count]);
   [self.table reloadData];
 }
 
@@ -586,6 +630,8 @@
   [_call_history release];
   [self.layer release];
   [self.enterpriseContacts release];
+  [self.clearRecordSheet release];
+  [self.dialSheet release];
   [super dealloc];
 }
 @end

@@ -13,4 +13,5 @@
 + (NSMutableArray *)loadCallRecordFromFilePath:(NSString *)filePath;
 + (void)saveCallRecord:(NSMutableArray *)record toFilePath:(NSString *)filePath;
 + (NSDate *)dialTime;
++ (void)deleteFileDatabade;
 @end

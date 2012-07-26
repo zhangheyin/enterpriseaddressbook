@@ -211,15 +211,17 @@
                   addressBook:(NSArray *)addressBook {
   for(NSMutableDictionary *people_info in addressBook) {
     ABContact *contact = [people_info objectForKey:kContact];
-    if (contact.phonenumbers != nil) {
-      NSString *phonenumbers = contact.phonenumbers;
-      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"(" withString:@""];
-      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@")" withString:@""];
-      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"-" withString:@""];
-      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@" " withString:@""];
-      if ([phonenumbers isEqualToString:key_word]) {
-        return contact;
-      }
+    for (NSString *phonenumbers in contact.phoneArray) {
+     // if (contact.phonenumbers != nil) {
+        //NSString *phonenumbers = contact.phonenumbers;
+        phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"(" withString:@""];
+        phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@")" withString:@""];
+        phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@" " withString:@""];
+        if ([phonenumbers isEqualToString:key_word]) {
+          return contact;
+        }
+      //}
     }
   }
   return nil;

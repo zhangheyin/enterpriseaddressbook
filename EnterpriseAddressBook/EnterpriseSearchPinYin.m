@@ -226,7 +226,7 @@
       NSString *phonenumbers = people_info.phone_number;
       phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"(" withString:@""];
       phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@")" withString:@""];
-      phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"-" withString:@""];
+     // phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@"-" withString:@""];
       phonenumbers = [phonenumbers stringByReplacingOccurrencesOfString:@" " withString:@""];
       if ([phonenumbers isEqualToString:key_word]) {
         return people_info;
