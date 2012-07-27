@@ -79,7 +79,8 @@
   
   cell.textLabel.text = aCompanyOrganization.departName;
   cell.imageView.image = (!aCompanyOrganization.id) ? [UIImage imageNamed:@"ICON_Group.png"] : [UIImage imageNamed:@"ICON_Person.png"];
-  
+  cell.selectedBackgroundView = [[[UIView alloc] initWithFrame:cell.frame] autorelease];
+  cell.selectedBackgroundView.backgroundColor = [UIColor colorWithRed:0xd9/255.0 green:0x66/255.0 blue:40.f/255.0 alpha:1.0]; 
   return cell;
 }
 

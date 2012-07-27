@@ -34,22 +34,6 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
-    
-    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
-    //NSLog(@"%@", self.enterprise_contacts);
-    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
-    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
-    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
-      [self.tableView reloadData];
-    });
-  });
-  dispatch_release(q);  
   [self.searchDisplayController.searchBar setTintColor:[UIColor colorWithRed:0xcc/255.0 
                                                                        green:0x33/255.0 
                                                                         blue:0.f/255.0 
@@ -73,7 +57,24 @@
   self.company_id = defultCompany.companyID; 
   self.companyName = defultCompany.companyName;
   [self initTitleView:self.companyName];  
-  //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
+
+  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+  dispatch_async(q, ^{
+    
+    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+    //NSLog(@"%@", self.enterprise_contacts);
+    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+    self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+      [self.tableView reloadData];
+    });
+  });
+  dispatch_release(q);  
+   //self.navigationItem.titleView = bt;  //self.navigationItem.titleView = self.dropDownList;
   [rightButton release];  
   [leftButton release];
   self.searchDisplayController.searchBar.keyboardType = UIKeyboardTypeNumberPad;
@@ -81,27 +82,27 @@
 
 - (void) viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
-    //[self copyFileDatabase];
-    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
-    //NSLog(@"%@", self.enterprise_contacts);
-    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
-    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
+//  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+//  dispatch_async(q, ^{
+//    //[self copyFileDatabase];
+//    self.enterprise_contacts = [EnterpriseContacts contacts:self.company_id];
+//    //NSLog(@"%@", self.enterprise_contacts);
+//    self.all_keys = [self fetchAllPinyinKey:self.enterprise_contacts];
+//    self.allDepartments = [EnterpriseContactDatabase queryAllEnterpriseDepartments:self.company_id];
     self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-    
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
-      [self.tableView reloadData];
-    });
-  });
-  
-  dispatch_release(q);  
-  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
-  self.company_id = defultCompany.companyID; 
-  self.companyName = defultCompany.companyName;
-  [self initTitleView:defultCompany.companyName];
+//    
+//
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//      [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个企业联系人", [self.enterprise_contacts count]]];
+//      [self.tableView reloadData];
+//    });
+//  });
+//  
+//  dispatch_release(q);  
+//  Company *defultCompany = [[EnterpriseNameDatabase queryEnterpriseName] objectAtIndex:0];
+//  self.company_id = defultCompany.companyID; 
+//  self.companyName = defultCompany.companyName;
+//  [self initTitleView:defultCompany.companyName];
 }
 
 - (void) initTitleView:(NSString *)companyName {
@@ -337,7 +338,7 @@
     name_lable.text = aContact.name;//[contact.contactName isEqualToString:@""] ? contact.emailaddresses : contact.contactName;
     // pinyin_lable.text = aContact.name_pinyin;[contact_dict objectForKey:kNamePinyin];
     // number_lable.text = aContact.phone_number;//contact.phonenumbers;
-    contact_image.image = [UIImage imageNamed:@"Avatar.png"];
+    contact_image.image = [UIImage imageNamed:@"ICON_Person.png"];
     return cell;
   } else {
     static NSString *CustomCellIdentifier = @"ContactItemCell";
@@ -364,7 +365,7 @@
     cell.name = aContact.name;
     //    cell.number = aContact.phone_number;
     // cell.pinyin = aContact.name_pinyin;
-    cell.image =  [UIImage imageNamed:@"Avatar.png"];
+    cell.image =  [UIImage imageNamed:@"ICON_Person.png"];
     
     return cell;
   } 

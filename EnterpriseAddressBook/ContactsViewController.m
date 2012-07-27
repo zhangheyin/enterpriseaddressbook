@@ -134,7 +134,7 @@
 	
 	UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:picker];
 
-	[self presentModalViewController:navigation animated:NO];
+	[self presentModalViewController:navigation animated:YES];
 	[navigation.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
 	[picker release];
 	[navigation release];	

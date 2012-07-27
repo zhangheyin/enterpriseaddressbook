@@ -73,11 +73,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
+         timestampString = "365049986.562997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "282"
-         endingLineNumber = "282"
+         startingLineNumber = "283"
+         endingLineNumber = "283"
          landmarkName = "-fetchContactOnASetion:numberOfRowsInSection:whichIndex:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -86,11 +86,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
+         timestampString = "365049986.562997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "303"
-         endingLineNumber = "303"
+         startingLineNumber = "304"
+         endingLineNumber = "304"
          landmarkName = "-fetchContactOnASetion:numberOfRowsInSection:whichIndex:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -242,24 +242,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
+         timestampString = "365049986.562997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "76"
-         endingLineNumber = "76"
-         landmarkName = "-viewDidLoad"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "206"
-         endingLineNumber = "206"
+         startingLineNumber = "207"
+         endingLineNumber = "207"
          landmarkName = "-actionSheet:didDismissWithButtonIndex:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -294,11 +281,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
+         timestampString = "365049986.562997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "219"
-         endingLineNumber = "219"
+         startingLineNumber = "220"
+         endingLineNumber = "220"
          landmarkName = "-actionSheet:didDismissWithButtonIndex:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -307,11 +294,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/CompanyOrganizationViewController.m"
-         timestampString = "364988974.422992"
+         timestampString = "365048334.63374"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "237"
-         endingLineNumber = "237"
+         startingLineNumber = "238"
+         endingLineNumber = "238"
          landmarkName = "-actionSheet:didDismissWithButtonIndex:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -398,11 +385,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "EnterpriseAddressBook/EnterpriseContactViewController.m"
-         timestampString = "364988562.193628"
+         timestampString = "365049986.562997"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "83"
-         endingLineNumber = "83"
+         startingLineNumber = "84"
+         endingLineNumber = "84"
          landmarkName = "-viewDidAppear:"
          landmarkType = "5">
       </FileBreakpoint>
