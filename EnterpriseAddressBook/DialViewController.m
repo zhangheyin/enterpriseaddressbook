@@ -100,7 +100,7 @@
       eContacts = [eContacts arrayByAddingObjectsFromArray:[EnterpriseContacts contacts:aCompany.companyID]];
     }
     self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-  NSLog(@"%@", self.call_history);
+  //NSLog(@"%@", self.call_history);
     //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
     
@@ -163,8 +163,10 @@
   if (actionSheet == self.clearRecordSheet) {
     switch (buttonIndex) {
       case 0:
-        [CallHistory deleteFileDatabade];
-        self.call_history = nil;
+        
+       // [CallHistory deleteFileDatabade];
+        self.call_history = [[NSMutableArray alloc] init];
+        [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
         [self.table reloadData];
         break;
       case 1:
@@ -346,7 +348,7 @@
   
   if (self.isSearching) {
     id aContact = [self.filteredListContent objectAtIndex:indexPath.row];
-    NSLog(@"%i", [self.filteredListContent count]);
+    //NSLog(@"%i", [self.filteredListContent count]);
     if ([aContact isKindOfClass:[NSDictionary class]]) {
       NSDictionary *contact_dict = [self.filteredListContent objectAtIndex:indexPath.row];
       ABContact *contact = [contact_dict objectForKey:kContact];
@@ -564,12 +566,12 @@
   [self.single_call_history setObject:callNumber forKey:kTelephoneNumber];
   [self.single_call_history setObject:[CallHistory dialTime] forKey:kDialTime];
   [self.call_history insertObject:self.single_call_history atIndex:0];  
-  
-  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:callNumber]];
+  NSString *phoneAddress = [NSString stringWithFormat:@"tel://%@", callNumber];
+  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneAddress]];
   [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
   [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
   self.telephone_number = @"";
-  NSLog(@"%@,  %@",self.single_call_history, self.call_history);
+  //NSLog(@"%@,  %@",self.single_call_history, self.call_history);
   [self.table reloadData];
 }
 

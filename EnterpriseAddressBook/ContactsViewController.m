@@ -83,18 +83,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated]; 
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
+//  dispatch_queue_t q = dispatch_queue_create("queue", 0);
+//  dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts]; 
     self.all_keys = [self fetchAllKey:self.contacts];
-    dispatch_async(dispatch_get_main_queue(), ^{
+ //   dispatch_async(dispatch_get_main_queue(), ^{
       // [self setIsSearching:NO];
       self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.searchDisplayController.searchBar setPlaceholder:[NSString stringWithFormat:@"联系人搜索 | 共有%i个联系人", [self.contacts count]]];
       [self.tableView reloadData];
-    });
-  });
-  dispatch_release(q);  
+  //  });
+  //});
+ // dispatch_release(q);  
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
   return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -362,23 +362,23 @@ sectionForSectionIndexTitle:(NSString *)title
   picker.allowsEditing = YES;
 
   
-  CATransition *animation = [CATransition animation];  
-  //动画时间  
-  animation.duration = 0.5f;  
-  //display mode, slow at beginning and end  
-  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
-  //过渡效果  
-  animation.type = @"pageCurl";  
-  //过渡方向  
-  animation.subtype = kCATransitionFromRight;  
-  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
-  animation.fillMode = kCAFillModeBackwards;  
-  //动画开始(在整体动画的百分比).  
-  animation.startProgress = 0.3;  
- // [imageView.layer addAnimation:animation forKey:nil];  
- // transition.delegate = self;
-  [self.navigationController.view.layer addAnimation:animation forKey:nil];
-  [self.navigationController pushViewController:picker animated:NO];
+//  CATransition *animation = [CATransition animation];  
+//  //动画时间  
+//  animation.duration = 0.5f;  
+//  //display mode, slow at beginning and end  
+//  animation.timingFunction = UIViewAnimationCurveEaseInOut;  
+//  //过渡效果  
+//  animation.type = @"pageCurl";  
+//  //过渡方向  
+//  animation.subtype = kCATransitionFromRight;  
+//  //暂时不知,感觉与Progress一起用的,如果不加,Progress好像没有效果  
+//  animation.fillMode = kCAFillModeBackwards;  
+//  //动画开始(在整体动画的百分比).  
+//  animation.startProgress = 0.3;  
+// // [imageView.layer addAnimation:animation forKey:nil];  
+// // transition.delegate = self;
+//  [self.navigationController.view.layer addAnimation:animation forKey:nil];
+  [self.navigationController pushViewController:picker animated:YES];
 }
 
 - (void)fetchContacts {
