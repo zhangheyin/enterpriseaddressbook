@@ -114,7 +114,6 @@
 		848744D515C0D350007AE0FC /* CallHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 848744D415C0D350007AE0FC /* CallHistory.m */; };
 		8496974515B6465600C72EEF /* ContactItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8496974215B6465600C72EEF /* ContactItemCell.m */; };
 		8496974615B6465600C72EEF /* ContactItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8496974415B6465600C72EEF /* ContactItemCell.xib */; };
-		84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C1912215BF8FD1005AD8D3 /* DropDownList.m */; };
 		84F22FE115B53F00005CF86E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22FE015B53F00005CF86E /* UIKit.framework */; };
 		84F22FE315B53F00005CF86E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22FE215B53F00005CF86E /* Foundation.framework */; };
 		84F22FE515B53F00005CF86E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F22FE415B53F00005CF86E /* CoreGraphics.framework */; };
@@ -262,8 +261,6 @@
 		8496974215B6465600C72EEF /* ContactItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactItemCell.m; sourceTree = "<group>"; };
 		8496974315B6465600C72EEF /* ContactItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactItemCell.h; sourceTree = "<group>"; };
 		8496974415B6465600C72EEF /* ContactItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactItemCell.xib; sourceTree = "<group>"; };
-		84C1912115BF8FD1005AD8D3 /* DropDownList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropDownList.h; sourceTree = "<group>"; };
-		84C1912215BF8FD1005AD8D3 /* DropDownList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropDownList.m; sourceTree = "<group>"; };
 		84CB78B415B7AA4100936965 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "zh-Hans"; path = "/Users/admin/Desktop/MyTest/EnterpriseAddressBook/EnterpriseAddressBook/zh-Hans.lproj/DialViewController.xib"; sourceTree = "<absolute>"; };
 		84CB78B515B7AA4100936965 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "/Users/admin/Desktop/MyTest/EnterpriseAddressBook/EnterpriseAddressBook/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		84F22FDC15B53F00005CF86E /* EnterpriseAddressBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnterpriseAddressBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -490,10 +487,6 @@
 				84F230A815B54270005CF86E /* AddressBook */,
 				84F2309E15B5421B005CF86E /* PinYin */,
 				84F22FE715B53F00005CF86E /* Supporting Files */,
-				84C1912115BF8FD1005AD8D3 /* DropDownList.h */,
-				84C1912215BF8FD1005AD8D3 /* DropDownList.m */,
-				848744D315C0D350007AE0FC /* CallHistory.h */,
-				848744D415C0D350007AE0FC /* CallHistory.m */,
 			);
 			path = EnterpriseAddressBook;
 			sourceTree = "<group>";
@@ -522,6 +515,8 @@
 				84F2300F15B53FF0005CF86E /* DialView.m */,
 				84F2301015B53FF0005CF86E /* CallRecord.h */,
 				84F2301115B53FF0005CF86E /* CallRecord.m */,
+				848744D315C0D350007AE0FC /* CallHistory.h */,
+				848744D415C0D350007AE0FC /* CallHistory.m */,
 			);
 			name = DialViewController;
 			sourceTree = "<group>";
@@ -805,7 +800,6 @@
 				84541BA515B692B10079FF96 /* ABGroup.m in Sources */,
 				8466C6A415BCF2AE00607A3C /* CompanyOrganizationViewController.m in Sources */,
 				8467261C15BE4700009F5272 /* Company.m in Sources */,
-				84C1912315BF8FD1005AD8D3 /* DropDownList.m in Sources */,
 				848744D515C0D350007AE0FC /* CallHistory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
