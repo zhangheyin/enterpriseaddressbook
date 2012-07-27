@@ -624,7 +624,9 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption {
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue {
+  self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
   if (property == kABPersonPhoneProperty) {
+    
     ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
     //电话号码
     NSString *phoneNumber = [(NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, identifierForValue) autorelease];

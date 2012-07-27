@@ -12,6 +12,6 @@
 
 @property (nonatomic, copy) NSString *callName;
 @property (nonatomic, copy) NSString *callNumber;
-@property (nonatomic, strong) NSDate *callTime;
+@property (nonatomic, retain) NSDate *callTime;
 
 @end

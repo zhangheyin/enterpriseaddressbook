@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface Company : NSObject
-@property (nonatomic, strong) NSString *companyName;
-@property (nonatomic, strong) NSString *companyID;
+@property (nonatomic, copy) NSString *companyName;
+@property (nonatomic, copy) NSString *companyID;
 @end

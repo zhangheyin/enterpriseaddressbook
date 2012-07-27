@@ -274,6 +274,7 @@
 
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"删除成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];   
     [alertView show];
+    [alertView release];
    // [self setBarButtonItems];
     //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
   }   
@@ -413,7 +414,7 @@ sectionForSectionIndexTitle:(NSString *)title
   //NSLog(@"~~~~~~2~~~~~~~");        
   NSArray *final_result = [[result_of_key_pinyin arrayByAddingObjectsFromArray:result_of_number_search] arrayByAddingObjectsFromArray:result_of_detail_pinyin];
  // NSLog(@"filterContentForSearchText finish");
-  self.filteredListContent = [final_result copy];
+  self.filteredListContent = final_result;
 }
 
 
@@ -478,6 +479,7 @@ sectionForSectionIndexTitle:(NSString *)title
 shouldPerformDefaultActionForPerson:(ABRecordRef)person 
                     property:(ABPropertyID)property 
                   identifier:(ABMultiValueIdentifier)identifierForValue{
+  self.callHistory = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
   if (property == kABPersonPhoneProperty) {
     ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
     //电话号码

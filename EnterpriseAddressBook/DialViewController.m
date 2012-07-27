@@ -90,25 +90,27 @@
   
   self.clearRecordSheet = [[UIActionSheet alloc] init];
   self.dialSheet = [[UIActionSheet alloc] init];
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
+ // dispatch_queue_t q = dispatch_queue_create("queue", 0);
+ // dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts];  
     NSArray *eContacts = [[[NSArray alloc] init] autorelease];
     NSMutableArray *companyArray = [EnterpriseNameDatabase queryEnterpriseName];
     
     for (Company *aCompany in companyArray) {
-      eContacts = [eContacts arrayByAddingObjectsFromArray:[[EnterpriseContacts contacts:aCompany.companyID] copy]];
+      eContacts = [eContacts arrayByAddingObjectsFromArray:[EnterpriseContacts contacts:aCompany.companyID]];
     }
+    self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
+  NSLog(@"%@", self.call_history);
     //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
     
-    dispatch_async(dispatch_get_main_queue(), ^{ 
+   // dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
-      self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
-      [self.table reloadData];
-    });
-  });
-  dispatch_release(q);   
+      
+     
+   // });
+ // });
+ // dispatch_release(q);   
   
   self.isHidden = NO;
   self.telephone_number = [[[NSString alloc] init] autorelease];
@@ -118,30 +120,31 @@
   [[NSNotificationCenter defaultCenter] addObserver:self 
                                            selector:@selector(update) 
                                                name:@"update" 
-                                             object:nil];  
+                                             object:nil];
+      // [self.table reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated]; 
-  dispatch_queue_t q = dispatch_queue_create("queue", 0);
-  dispatch_async(q, ^{
+  //dispatch_queue_t q = dispatch_queue_create("queue", 0);
+ // dispatch_async(q, ^{
     self.contacts = [ABContactsHelper contacts];  
     NSArray *eContacts = [[[NSArray alloc] init] autorelease];
     NSMutableArray *companyArray = [EnterpriseNameDatabase queryEnterpriseName];
     
     for (Company *aCompany in companyArray) {
-      eContacts = [eContacts arrayByAddingObjectsFromArray:[[EnterpriseContacts contacts:aCompany.companyID] copy]];
+      eContacts = [eContacts arrayByAddingObjectsFromArray:[EnterpriseContacts contacts:aCompany.companyID]];
     }
     //NSLog(@"e %i  l %i", [eContacts count], [self.contacts count]);
     self.enterpriseContacts = eContacts;
     
-    dispatch_async(dispatch_get_main_queue(), ^{ 
+   // dispatch_async(dispatch_get_main_queue(), ^{ 
       //NSLog(@"DFSDFAS %@", self.call_history);
       self.call_history = [CallHistory loadCallRecordFromFilePath:[CallHistory filePathName]];
       [self.table reloadData];
-    });
-  });
-  dispatch_release(q);  
+   // });
+  //});
+  //dispatch_release(q);  
 }
 
 - (void) clearRecord {
@@ -566,6 +569,7 @@
   [CallHistory saveCallRecord:self.call_history toFilePath:[CallHistory filePathName]];
   [self.number_display setTitle:@"" forState:UIStatusBarStyleDefault];
   self.telephone_number = @"";
+  NSLog(@"%@,  %@",self.single_call_history, self.call_history);
   [self.table reloadData];
 }
 

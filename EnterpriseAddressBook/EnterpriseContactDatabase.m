@@ -57,7 +57,7 @@
   } else {
     FMResultSet *rs = [db executeQuery:@"select * from data where company_id = ?", company_id];
     while ([rs next]) {
-      EnterpriseContact *aContact = [[EnterpriseContact alloc] init] ;
+      EnterpriseContact *aContact = [[[EnterpriseContact alloc] init] autorelease];
       aContact.contact_id   = [rs stringForColumn:@"contact_id"];
       aContact.name         = [rs stringForColumn:@"name"];
       aContact.name_pinyin  = [rs stringForColumn:@"name_pinyin"];
@@ -77,7 +77,7 @@
 //                               
 //                               ];
 //      NSLog(@"%@", stringvcard);
-      [aContact release];
+      //[aContact release];
     }
     [rs close];
     return all_enterprise_contacts_array;

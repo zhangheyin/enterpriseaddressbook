@@ -48,6 +48,7 @@
 }
 
 + (void)saveCallRecord:(NSMutableArray *)record toFilePath:(NSString *)filePath {
+  NSLog(@"saveCallRecord %@", record);
   NSMutableData *data = [[NSMutableData alloc] init];
   NSKeyedArchiver *vdArchiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
   [vdArchiver encodeObject:record forKey:kSaveKeyMarkerLines];

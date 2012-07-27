@@ -70,7 +70,9 @@
   aNavigationController1.tabBarItem = dialTab;
   aNavigationController2.tabBarItem = contactTab;
   aNavigationController3.tabBarItem = enterpriseTab;
-  
+  [dialTab release];
+  [contactTab release];
+  [enterpriseTab release];
   [aNavigationController1.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   [aNavigationController2.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
   [aNavigationController3.navigationBar setTintColor:[UIColor colorWithRed:0xcc/255.0 green:0x33/255.0 blue:0.f/255.0 alpha:1.0]];
